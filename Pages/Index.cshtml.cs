@@ -23,7 +23,7 @@ namespace RegistrationSystem.Pages
 				{
 					connection.Open();
 
-					// SQL command to check if specific values are present
+					// check if login values are valid and present in database
 					string checkValuesSql = @"
                 SELECT COUNT(*)
                 FROM Students
@@ -31,16 +31,16 @@ namespace RegistrationSystem.Pages
 
 					using (SqlCommand command = new SqlCommand(checkValuesSql, connection))
 					{
-						// Set parameter values
+						
 						command.Parameters.AddWithValue("@ValueToCheck1", name.ToLower());
 						command.Parameters.AddWithValue("@ValueToCheck2", password);
 
-						// Execute the command and read the result
+					
 						int rowCount = (int)command.ExecuteScalar();
 
 						if (rowCount > 0)
 						{
-							// Values are present in the database
+							
 							return true;
 						}
 						else
