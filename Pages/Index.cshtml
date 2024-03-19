@@ -16,11 +16,11 @@
                     <form method="post">
                         <div class="form-group">
                             <label for="value1">Username:</label>
-                            <input id="value1" class="form-control" required />
+                            <input id="value1" asp-for="nm" class="form-control" required />
                         </div>
                         <div class="form-group">
                             <label for="value2">Password:</label>
-                            <input type="password" id="value2" class="form-control" required />
+                            <input type="password" id="value2" asp-for="pw" class="form-control" required />
                         </div>
                         <button type="submit" class="btn btn-primary btn-block" onclick="window.location.href='StudentView'">Sign In</button>
                     </form>
