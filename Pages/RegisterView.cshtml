@@ -1,4 +1,15 @@
 ﻿@page
 @model RegistrationSystem.Pages.RegisterViewModel
 @{
+	ViewData["Title"] = "REGISTRATION VIEW";
 }
+
+
+<div class="text-center" style="height: 200px; overflow-y: scroll;">
+    @foreach(var module in Model.ModuleList){
+    <button type="button" class="collapsible">@module.ModuleCode</button>
+    <div class="content">
+    <p>@module.ModuleCode @module.ModuleName @module.ModuleDetails</p>
+    </div>
+    }
+</div>

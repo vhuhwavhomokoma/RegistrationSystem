@@ -7,6 +7,8 @@ namespace RegistrationSystem.Pages
 {
     public class RegisterViewModel : PageModel
     {
+        public List<Module> ModuleList = new List<Module>();
+
         private void QueryGET()
         {
             string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
@@ -29,10 +31,12 @@ namespace RegistrationSystem.Pages
                         {
                             // Access data using reader for each row
                             int value1 = reader.GetInt32(0);
-                            string value2 = reader.GetString(1);  // Assuming Column2 is of type NVARCHAR
+                            string value2 = reader.GetString(1);  
                             string value3 = reader.GetString(2);
                             string value4 = reader.GetString(3);
                             int value5 = reader.GetInt32(4);
+                            Module module = new Module(value1,value2,value3,value4,value5);
+                            ModuleList.Add(module);
                             
                         }
                     }
@@ -46,6 +50,8 @@ namespace RegistrationSystem.Pages
 
         public void OnGet()
         {
+            QueryGET();
+
         }
     }
 }
