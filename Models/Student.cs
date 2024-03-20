@@ -2,11 +2,11 @@
 {
     public class Student: User
     {
-        private string _studentId;
+        private int _studentId;
         private string _studentName;
         private string _course;
 
-        public Student(string username, string password, string studentId, string studentName, string course) : base(username, password)
+        public Student(string username, string password, int studentId, string studentName, string course) : base(username, password)
         {
             _studentId = studentId;
             _studentName = studentName;
@@ -14,7 +14,7 @@
 
         }
 
-        public string StudentId { get { return _studentId; } }
+        public int StudentId { get { return _studentId; } }
 
         public string StudentName { get { return _studentName; } }
         
