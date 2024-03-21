@@ -33,33 +33,35 @@
 </style>
 
 
-
 <div>
     <form method="post">
-        <label for="gsearch">Search Module Code:</label>
+        <label for="gsearch">Search Module:</label>
         <input asp-for="searchquery" type="text" id="gsearch">
         <button type="submit">Search</button>
     </form>
 </div>
-
-<body>
 <div class="text-center" style="height: 200px; overflow-y: scroll;">
     @foreach(var module in Model.ModuleList){
     <button type="button" class="collapsible">@module.ModuleCode</button>
     <div class="content">
     <p>@module.ModuleCode @module.ModuleName @module.ModuleDetails</p>
-                <button id="@module.ModuleCode" OnClick="displayPressed('@module.ModuleCode')">REGISTER</button>
+            <form asp-action="ProcessSelectedItems" method="post">
+                    <input type="checkbox" name="selectedItems" value="@module.ModuleCode" /> @module.ModuleCode <br />
+                <button type="submit">Submit</button>
+            </form>
+
     </div>
+        
     }
 </div>
+
+   
     
-    <div id="selectedButtons">
-        
-    </div>
+    
+ 
 
 
 
-</body>
     
 
 
@@ -81,13 +83,3 @@
     }
 </script>
 
-<script>
-    function displayPressed(buttonId) {
-        var button = document.getElementById(buttonId);
-        button.disabled = true;
-        var buttonText = buttonId;
-        var contentDiv = document.getElementById('selectedButtons');
-        contentDiv.innerHTML += "<p>" + buttonText + "</p>";
-    }
-
-</script>

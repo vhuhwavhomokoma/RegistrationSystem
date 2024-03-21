@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using RegistrationSystem.Models;
 
 
+
 namespace RegistrationSystem.Pages
 {
     public class RegisterViewModel : PageModel
@@ -12,6 +13,12 @@ namespace RegistrationSystem.Pages
 
         [BindProperty]
         public string searchquery { get; set; } = default!;
+
+
+        public List<string> strings = new List<string>();
+
+        //[BindProperty]
+        //public string selected { get; set; } = default!;
 
         private void QueryGET()
         {
@@ -51,11 +58,11 @@ namespace RegistrationSystem.Pages
         }
 
 
-        public IActionResult onPost()
+        public IActionResult OnPost()
         {
-            if (searchquery==null)
+            if (searchquery == null)
             {
-                return Page();
+                return RedirectToPage("/Privacy");
             }
             QueryGET();
             List<Module> modules = new List<Module>();
@@ -63,8 +70,8 @@ namespace RegistrationSystem.Pages
             List<Module> searchresult = new List<Module>();
             for (int i = 0; i < modules.Count; i++)
             {
-                string? mcode = modules[i].ModuleCode;
-                if (mcode?.ToLower().IndexOf(searchquery.ToLower()) != -1)
+                string? book_in_library = modules[i].ModuleCode;
+                if (book_in_library?.ToLower().IndexOf(searchquery.ToLower()) != -1)
                 {
                     searchresult.Add(modules[i]);
                 }
@@ -75,14 +82,12 @@ namespace RegistrationSystem.Pages
 
             return Page();
         }
-
-      
-
-
         public void OnGet()
         {
-            QueryGET();
 
+            QueryGET();
         }
+
+
     }
 }
