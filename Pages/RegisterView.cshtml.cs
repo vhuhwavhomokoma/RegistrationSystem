@@ -3,11 +3,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using RegistrationSystem.Models;
 
+
 namespace RegistrationSystem.Pages
 {
     public class RegisterViewModel : PageModel
     {
         public List<Module> ModuleList = new List<Module>();
+
+        [BindProperty]
+        public string searchquery { get; set; } = default!;
 
         private void QueryGET()
         {
@@ -46,6 +50,33 @@ namespace RegistrationSystem.Pages
 
         }
 
+
+        public IActionResult onPost()
+        {
+            if (searchquery==null)
+            {
+                return Page();
+            }
+            QueryGET();
+            List<Module> modules = new List<Module>();
+            modules = ModuleList;
+            List<Module> searchresult = new List<Module>();
+            for (int i = 0; i < modules.Count; i++)
+            {
+                string? mcode = modules[i].ModuleCode;
+                if (mcode?.ToLower().IndexOf(searchquery.ToLower()) != -1)
+                {
+                    searchresult.Add(modules[i]);
+                }
+            }
+
+            ModuleList = searchresult;
+
+
+            return Page();
+        }
+
+      
 
 
         public void OnGet()
