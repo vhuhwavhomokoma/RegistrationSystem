@@ -45,9 +45,9 @@
     <button type="button" class="collapsible">@module.ModuleCode</button>
     <div class="content">
     <p>@module.ModuleCode @module.ModuleName @module.ModuleDetails</p>
-            <form asp-action="ProcessSelectedItems" method="post">
-                    <input type="checkbox" name="selectedItems" value="@module.ModuleCode" /> @module.ModuleCode <br />
-                <button type="submit">Submit</button>
+            <form method="post">
+                <input type="hidden" asp-for="selected" value="@module.ModuleCode" />
+                <button type="submit">Register</button>
             </form>
 
     </div>
