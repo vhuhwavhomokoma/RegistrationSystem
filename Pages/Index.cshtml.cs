@@ -72,20 +72,19 @@ namespace RegistrationSystem.Pages
                 {
                     connection.Open();
 
-                    // SQL command to check if specific values are present
+                    
                     string queryAllDataSql = @"
                 SELECT ID, username, adminpassword
                 FROM Administrators";
 
                     using (SqlCommand command = new SqlCommand(queryAllDataSql, connection))
                     {
-                        // Execute the command and read the result
+                        
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                // Access data using reader for each row
-                                // Assuming Column2 is of type NVARCHAR
+                                
                                 int value3 = reader.GetInt32(0);
                                 string value4 = reader.GetString(1);
                                 string value5 = reader.GetString(2);
