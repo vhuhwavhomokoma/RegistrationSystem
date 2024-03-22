@@ -3,6 +3,7 @@
     public class Administrator: User
     {
         private int _administratorId;
+        
 
         public Administrator(string username, string password, int administratorId): base(username, password) 
             {

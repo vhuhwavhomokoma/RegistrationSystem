@@ -45,28 +45,42 @@
     <button type="button" class="collapsible">@module.ModuleCode</button>
     <div class="content">
     <p>@module.ModuleCode @module.ModuleName @module.ModuleDetails</p>
-            <form method="post">
-                <input type="hidden" asp-for="selected" value="@module.ModuleCode" />
-                <button type="submit">Register</button>
-            </form>
-
+    <option value="@module.ModuleCode">@module.ModuleCode</option>
+    <form method="post">
+        <input asp-for="selected" value="@module.ModuleCode" type="hidden" />
+        <button type="submit" >Register</button>
+    </form>
     </div>
         
     }
 </div>
 
-   
-    
+
+<div>
+    @foreach (var regcourse in Model.courseRegistered)
+    {
+     <p>
+         @regcourse
+     </p>   
+    }
+
+</div>
+
+
+<div>
+    <form method="post">
+        <input asp-for="finalize" type="hidden" value="Finalize" />
+        <button type="submit">Register For Courses</button>
+    </form>
+
+</div>
+
+
     
  
-
-
-
-    
-
-
-
 <script>
+
+
     var coll = document.getElementsByClassName("collapsible");
     var i;
 

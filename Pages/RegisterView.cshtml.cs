@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using RegistrationSystem.Models;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 
 
@@ -12,14 +13,18 @@ namespace RegistrationSystem.Pages
     {
         public List<Module> ModuleList = new List<Module>();
 
+        public List<string> courseRegistered = new List<string>();
+
         [BindProperty]
         public string searchquery { get; set; } = default!;
 
-
-        //public List<string> strings = new List<string>();
+        [BindProperty]
+        public string selected { get; set; }= default!;
 
         [BindProperty]
-        public string selected { get; set; } = default!;
+        public string finalize { get; set; } = default!;
+
+        
 
         private void QueryGET()
         {
@@ -67,8 +72,12 @@ namespace RegistrationSystem.Pages
                 {
                     return RedirectToPage("/Privacy");
                 }
+
+                courseRegistered.Add(selected);
+
                 QueryGET();
-                Console.WriteLine(selected);
+               
+                
 
                 return Page();
             }
@@ -86,14 +95,14 @@ namespace RegistrationSystem.Pages
             }
 
             ModuleList = searchresult;
-            Console.WriteLine("TEST THE SYSTEM");
+            
             
 
             return Page();
         }
         public void OnGet()
         {
-
+            courseRegistered = new List<string>();
             QueryGET();
         }
 
