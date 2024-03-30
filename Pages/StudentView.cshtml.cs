@@ -9,6 +9,8 @@ namespace RegistrationSystem.Pages
     {
         public Student studentUser { get; set; } = default!;
 
+        public int studentId { get; set; }
+
         private Student GetStudent(int student_id)
         {
             string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
@@ -62,6 +64,7 @@ namespace RegistrationSystem.Pages
 
         public void OnGet(int id)
         {
+            studentId = id;
             studentUser = GetStudent(id);
         }
     }

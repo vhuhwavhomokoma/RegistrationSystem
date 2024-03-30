@@ -20,11 +20,7 @@ namespace RegistrationSystem.Pages
 
         [BindProperty]
         public string selected { get; set; }= default!;
-
-        [BindProperty]
-        public string finalize { get; set; } = default!;
-
-        
+   
 
         private void QueryGET()
         {
@@ -64,6 +60,99 @@ namespace RegistrationSystem.Pages
         }
 
 
+        private void QueryModulesRegistered(int studentid)
+        {
+            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    int primaryKeyValue = studentid;
+
+                    string queryAllDataSql = @"
+                SELECT modulesRegistered
+                FROM Students WHERE ID = @PrimaryKeyValue";
+
+                    using (SqlCommand command = new SqlCommand(queryAllDataSql, connection))
+                    {
+                        command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
+                        
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+
+                                string value1 = reader.GetString(0);
+                                courseRegistered = value1.Split(':').ToList();
+
+
+                            }
+                        }
+
+                    }
+
+                }catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+        }
+
+        private bool updateStudent(int studentid, string module)
+        {
+            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    // Specify the primary key value or any condition to identify the element to update
+                    int primaryKeyValue = studentid;
+
+                    // SQL command to update the element
+                    string updateElementSql = @"
+                UPDATE Students
+                SET modulesRegistered = modulesRegistered + @NewValue1
+                WHERE ID = @PrimaryKeyValue";
+
+                    using (SqlCommand command = new SqlCommand(updateElementSql, connection))
+                    {
+                        // Set parameter values
+                        command.Parameters.AddWithValue("@NewValue1", module+":");
+                        command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
+
+                        // Execute the command
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            // Update successful
+                            connection.Close();
+                            return true;
+                        }
+                        else
+                        {
+                            // No matching element found for the update
+                            connection.Close();
+                            return false;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+            }
+
+
+        }
+
+
         public IActionResult OnPost()
         {
             if (searchquery == null)
@@ -72,8 +161,14 @@ namespace RegistrationSystem.Pages
                 {
                     return RedirectToPage("/Privacy");
                 }
-
-                courseRegistered.Add(selected);
+                int usr = 0;
+                string? param1 = Request.Query["User"];
+                if (param1 != null)
+                {
+                    usr = Int32.Parse(param1);
+                }
+                bool stst = updateStudent(usr,selected);
+                
 
                 QueryGET();
                
@@ -102,8 +197,14 @@ namespace RegistrationSystem.Pages
         }
         public void OnGet()
         {
-            courseRegistered = new List<string>();
+            int usr = 0;
+            string? param1 = Request.Query["User"];
+            if (param1 != null)
+            {
+                usr = Int32.Parse(param1);
+            }
             QueryGET();
+            QueryModulesRegistered(usr);
         }
 
 
