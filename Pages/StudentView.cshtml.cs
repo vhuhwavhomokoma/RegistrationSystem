@@ -11,6 +11,8 @@ namespace RegistrationSystem.Pages
 
         public int studentId { get; set; }
 
+        public List<string> courseRegistered = new List<string>();
+
         private Student GetStudent(int student_id)
         {
             string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
@@ -60,12 +62,55 @@ namespace RegistrationSystem.Pages
 
         }
 
+        private void QueryModulesRegistered(int studentid)
+        {
+            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    int primaryKeyValue = studentid;
+
+                    string queryAllDataSql = @"
+                SELECT modulesRegistered
+                FROM Students WHERE ID = @PrimaryKeyValue";
+
+                    using (SqlCommand command = new SqlCommand(queryAllDataSql, connection))
+                    {
+                        command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
+
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+
+                                string value1 = reader.GetString(0);
+                                courseRegistered = value1.Split(':').ToList();
+
+
+                            }
+                        }
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+        }
+
 
 
         public void OnGet(int id)
         {
             studentId = id;
             studentUser = GetStudent(id);
+            QueryModulesRegistered(id);
         }
     }
 }

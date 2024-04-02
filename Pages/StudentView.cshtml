@@ -55,7 +55,10 @@
         <p>@Model.studentUser.Course</p>
         <div class="dashboard-component">
             <h2>Enrolled Modules</h2>
-            
+            @foreach (var module in Model.courseRegistered)
+            {
+                <p>@module</p>
+            }
             
             
         </div>

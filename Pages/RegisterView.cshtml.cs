@@ -167,8 +167,15 @@ namespace RegistrationSystem.Pages
                 {
                     usr = Int32.Parse(param1);
                 }
+
+                QueryModulesRegistered(usr);
+
+                if (courseRegistered.Contains(selected))
+                {
+                    return RedirectToPage("/Privacy");
+                }
+
                 bool stst = updateStudent(usr,selected);
-                
 
                 QueryGET();
                
