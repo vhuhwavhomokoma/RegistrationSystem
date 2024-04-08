@@ -59,7 +59,7 @@ namespace RegistrationSystem.DatabaseService
 
         }
 
-		private List<Module> QueryModule()
+		public List<Module> QueryModule()
 		{
 			string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
 
@@ -101,6 +101,43 @@ namespace RegistrationSystem.DatabaseService
 
 		}
 
+
+        public void queryAddStudent(string fullname,string course)
+        {
+			string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+
+
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				try
+				{
+					connection.Open();
+
+					
+					string QueryInsert = @"INSERT INTO Students(ID,StudentName,username,studentpassword,course,modulesRegistered) VALUES (@Value1,@Value2,@Value3,@Value4,@Value5,@Value6);";
+
+					using (SqlCommand command = new SqlCommand(QueryInsert, connection))
+					{
+
+							
+							command.Parameters.AddWithValue("@Value1", 4);
+							command.Parameters.AddWithValue("@Value2", fullname);
+							command.Parameters.AddWithValue("@Value3", "u0000004");
+							command.Parameters.AddWithValue("@Value4", "password44");
+							command.Parameters.AddWithValue("@Value5", course);
+							command.Parameters.AddWithValue("@Value6", "0:");
+
+
+
+					}
+					}
+				catch (Exception)
+				{
+					
+				}
+			}
+
+		}
 
 	}
 }

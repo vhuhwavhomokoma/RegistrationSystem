@@ -3,9 +3,50 @@
 @{
 }
 
-<p>ADMIN PAGE</p>
-
+<h4>ADMIN PAGE</h4>
+<p>CURRENT STUDENTS</p>
 @foreach(var student in Model.studentList){
 	<p>@student.UserName</p>
 	
 }
+
+<p>CURRENT MODULES</p>
+@foreach (var module in Model.moduleList)
+{
+	<p>@module.ModuleName</p>
+
+}
+
+
+
+<h7>ADD NEW STUDENT</h7>
+
+<form method="post">
+<label>Name</label>
+<input asp-for="studentName" type="text"/><br />
+<label>Surname</label>
+<input asp-for="studentSurname" type="text"/><br />
+<label>email</label>
+<input asp-for="studentEmail" type="text"/><br />
+<label>Course</label>
+<input asp-for="studentCourse" type="text" /><br />
+<button>CREATE STUDENT</button>
+
+</form>
+
+<br />
+
+<h7>ADD NEW MODULE</h7>
+
+<form method="post">
+	<label>Module Code</label>
+	<input type="text" /><br />
+	<label>Module Name</label>
+	<input type="text" /><br />
+	<label>Description</label>
+	<input type="text" /><br />
+	<label>Course</label>
+	<input type="text" />
+	<button>CREATE Module</button>
+
+</form>
