@@ -1,5 +1,6 @@
 ﻿using RegistrationSystem.Models;
 using System.Data.SqlClient;
+using RegistrationSystem.Supportfeatures;
 
 namespace RegistrationSystem.DatabaseService
 {
@@ -59,11 +60,11 @@ namespace RegistrationSystem.DatabaseService
 
         }
 
-		public List<Module> QueryModule()
+		public List<Models.Module> QueryModule()
 		{
 			string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
 
-			List<Module> modules = new List<Module>();
+			List<Models.Module> modules = new List<Models.Module>();
 
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
@@ -87,7 +88,7 @@ namespace RegistrationSystem.DatabaseService
 							string value3 = reader.GetString(2);
 							string value4 = reader.GetString(3);
 							int value5 = reader.GetInt32(4);
-							Module module = new Module(value1, value2, value3, value4, value5);
+							Models.Module module = new Models.Module(value1, value2, value3, value4, value5);
 							modules.Add(module);
 
 						}
@@ -102,7 +103,9 @@ namespace RegistrationSystem.DatabaseService
 		}
 
 
-        public void queryAddStudent(string fullname,string course)
+
+
+		public void queryAddStudent(string fullname,string course)
         {
 			string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
 
@@ -112,28 +115,58 @@ namespace RegistrationSystem.DatabaseService
 				try
 				{
 					connection.Open();
+					Support support = new Support();
+					int lastIndex = 0;
+					string nextusername = "";
+					string QueryLastRow = @"SELECT ID, username FROM Students WHERE ID=(SELECT max(ID) FROM Students)";
 
-					
-					string QueryInsert = @"INSERT INTO Students(ID,StudentName,username,studentpassword,course,modulesRegistered) VALUES (@Value1,@Value2,@Value3,@Value4,@Value5,@Value6);";
 
-					using (SqlCommand command = new SqlCommand(QueryInsert, connection))
+					using (SqlCommand command = new SqlCommand(QueryLastRow, connection))
 					{
+						
+						using (SqlDataReader reader = command.ExecuteReader())
+						{
+							while (reader.Read())
+							{
+								lastIndex = reader.GetInt32(0);
+								string value2 = reader.GetString(1);
+								nextusername = support.generateUsername(value2);
 
-							
-							command.Parameters.AddWithValue("@Value1", 4);
+
+							}
+
+
+
+						}
+					}
+
+						string QueryInsert = @"INSERT INTO Students(ID,StudentName,username,studentpassword,course,modulesRegistered) VALUES (@Value1,@Value2,@Value3,@Value4,@Value5,@Value6)";
+
+						using (SqlCommand command = new SqlCommand(QueryInsert, connection))
+						{
+							command.Parameters.AddWithValue("@Value1", lastIndex+1);
 							command.Parameters.AddWithValue("@Value2", fullname);
-							command.Parameters.AddWithValue("@Value3", "u0000004");
-							command.Parameters.AddWithValue("@Value4", "password44");
+							command.Parameters.AddWithValue("@Value3", nextusername);
+							command.Parameters.AddWithValue("@Value4", support.RandomPassword());
 							command.Parameters.AddWithValue("@Value5", course);
 							command.Parameters.AddWithValue("@Value6", "0:");
 
+						    int rowsAffected = command.ExecuteNonQuery();
 
+							if (rowsAffected > 0)
+						{
+							Console.WriteLine("Entry inserted successfully.");
+						}
+						else
+						{
+							Console.WriteLine("No entry inserted.");
+						}
 
 					}
 					}
-				catch (Exception)
+				catch (Exception e)
 				{
-					
+					Console.WriteLine(e.Message);
 				}
 			}
 

@@ -29,8 +29,10 @@ namespace RegistrationSystem.Pages
             {
                 return Page();
             }
-			QueryService queryService = new QueryService();
-            queryService.queryAddStudent(studentName+" "+studentSurname,studentCourse);
+			QueryService queryService = new QueryService();			
+			queryService.queryAddStudent(studentName+" "+studentSurname,studentCourse);
+			studentList = queryService.QueryGET();
+			moduleList = queryService.QueryModule();
 
 			return Page();
         }
