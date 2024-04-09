@@ -102,6 +102,65 @@ namespace RegistrationSystem.DatabaseService
 
 		}
 
+		public void queryAddModule(string modulecode,string modulename,string moduledescription)
+		{
+			string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+
+
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				try
+				{
+					connection.Open();
+					
+					int lastIndex = 0;
+					
+					string QueryLastRow = @"SELECT ID FROM Modules WHERE ID=(SELECT max(ID) FROM Modules)";
+
+
+					using (SqlCommand command = new SqlCommand(QueryLastRow, connection))
+					{
+
+						using (SqlDataReader reader = command.ExecuteReader())
+						{
+							while (reader.Read())
+							{
+								lastIndex = reader.GetInt32(0);
+								
+
+							}
+
+
+
+						}
+					}
+
+					string QueryInsert = @"INSERT INTO Modules(ID,ModuleCode,ModuleName,ModuleDetails,NumRegistered) VALUES (@Value1,@Value2,@Value3,@Value4,@Value5)";
+
+					using (SqlCommand command = new SqlCommand(QueryInsert, connection))
+					{
+						command.Parameters.AddWithValue("@Value1", lastIndex + 1);
+						command.Parameters.AddWithValue("@Value2", modulecode);
+						command.Parameters.AddWithValue("@Value3", modulename);
+						command.Parameters.AddWithValue("@Value4", moduledescription);
+						command.Parameters.AddWithValue("@Value5", 0);
+						
+
+						int rowsAffected = command.ExecuteNonQuery();
+
+
+					}
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e.Message);
+				}
+			}
+
+
+
+		}
+
 
 
 
@@ -153,14 +212,6 @@ namespace RegistrationSystem.DatabaseService
 
 						    int rowsAffected = command.ExecuteNonQuery();
 
-							if (rowsAffected > 0)
-						{
-							Console.WriteLine("Entry inserted successfully.");
-						}
-						else
-						{
-							Console.WriteLine("No entry inserted.");
-						}
 
 					}
 					}

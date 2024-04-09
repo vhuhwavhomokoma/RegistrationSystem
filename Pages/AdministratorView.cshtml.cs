@@ -22,14 +22,34 @@ namespace RegistrationSystem.Pages
         [BindProperty]
         public string studentCourse { get; set; } = default!;
 
+        [BindProperty]
+        public string moduleCode { get; set; } = default!;
+
+        [BindProperty]
+        public string moduleName { get; set; } = default!;
+
+        [BindProperty]
+        public string moduleDescription { get; set; } = default!;
+
+        [BindProperty]
+        public string moduleCourse { get; set; } = default!;
 
         public IActionResult OnPost()
         {
-            if (studentName == null || studentSurname == null || studentEmail == null || studentCourse == null)
+			QueryService queryService = new QueryService();
+			if (studentName == null || studentSurname == null || studentEmail == null || studentCourse == null)
             {
-                return Page();
+                if (moduleCode == null || moduleName == null || moduleDescription == null || moduleCourse == null)
+                {
+                    return Page();
+                }
+				queryService.queryAddModule(moduleCode, moduleName, moduleDescription);
+				studentList = queryService.QueryGET();
+				moduleList = queryService.QueryModule();
+
+				return Page();
             }
-			QueryService queryService = new QueryService();			
+						
 			queryService.queryAddStudent(studentName+" "+studentSurname,studentCourse);
 			studentList = queryService.QueryGET();
 			moduleList = queryService.QueryModule();

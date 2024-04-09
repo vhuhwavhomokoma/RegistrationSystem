@@ -34,7 +34,7 @@ namespace RegistrationSystem.Supportfeatures
 		{
 			int num = int.Parse(lastusername.Substring(1));
 			num += 1;
-			Console.WriteLine(num);
+			
 			string newusername = num.ToString();
 			while (newusername.Length < 7)
 			{
