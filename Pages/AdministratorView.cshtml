@@ -3,20 +3,66 @@
 @{
 }
 
+
+<style>
+    .collapsible {
+        background-color: #266af2;
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+
+        .active, .collapsible:hover {
+            background-color: #0d3890;
+        }
+
+    .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
+    }
+
+</style>
+
 <h4>ADMIN PAGE</h4>
 <p>CURRENT STUDENTS</p>
-@foreach(var student in Model.studentList){
-	<p>@student.UserName</p>
-	
-}
+<div class="text-center" style="height: 200px; overflow-y: scroll;">
+    @foreach (var student in Model.studentList)
+    {
+        <button type="button" class="collapsible">@student.UserName</button>
+        <div class="content">
+            <p>@student.UserName</p>
+            <form method="post">
+                <input asp-for="deregister" type="hidden" value="@student.StudentId"/>
+                <button type="submit">Deregister</button>
+            </form>
+        </div>
+
+    }
+</div>
+
 
 <p>CURRENT MODULES</p>
-@foreach (var module in Model.moduleList)
-{
-	<p>@module.ModuleName</p>
+<div class="text-center" style="height: 200px; overflow-y: scroll;">
+    @foreach (var module in Model.moduleList)
+    {
+        <button type="button" class="collapsible">@module.ModuleName</button>
+        <div class="content">
+            <p>@module.ModuleName</p>
+            <form method="post">
+                <input asp-for= "remove" type="hidden" value="@module.Id"/>
+                <button type="submit">Remove</button>
+            </form>
+        </div>
 
-}
-
+    }
+</div>
 
 
 <h7>ADD NEW STUDENT</h7>
@@ -50,3 +96,24 @@
 	<button>CREATE Module</button>
 
 </form>
+
+
+
+<script>
+
+
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>

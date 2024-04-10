@@ -161,10 +161,43 @@ namespace RegistrationSystem.DatabaseService
 
 		}
 
+		public void degregisterQuery(int studentid)
+		{
+            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                 
+
+                    string QueryDeregister = @"DELETE FROM Students WHERE ID = @Value1";
+
+                    using (SqlCommand command = new SqlCommand(QueryDeregister, connection))
+                    {
+                        command.Parameters.AddWithValue("@Value1", studentid);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+
+
+        }
 
 
 
-		public void queryAddStudent(string fullname,string course)
+
+        public void queryAddStudent(string fullname,string course)
         {
 			string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
 

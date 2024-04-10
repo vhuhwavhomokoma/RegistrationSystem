@@ -34,27 +34,44 @@ namespace RegistrationSystem.Pages
         [BindProperty]
         public string moduleCourse { get; set; } = default!;
 
+        [BindProperty]
+        public string deregister {  get; set; } = default!;
+
+        [BindProperty]
+        public string remove { get; set; } = default!;
+
         public IActionResult OnPost()
         {
-			QueryService queryService = new QueryService();
-			if (studentName == null || studentSurname == null || studentEmail == null || studentCourse == null)
+            QueryService queryService = new QueryService();
+            if (deregister ==null)
             {
-                if (moduleCode == null || moduleName == null || moduleDescription == null || moduleCourse == null)
+                
+                if (studentName == null || studentSurname == null || studentEmail == null || studentCourse == null)
                 {
+                    if (moduleCode == null || moduleName == null || moduleDescription == null || moduleCourse == null)
+                    {
+
+                        return Page();
+                    }
+                    queryService.queryAddModule(moduleCode, moduleName, moduleDescription);
+                    studentList = queryService.QueryGET();
+                    moduleList = queryService.QueryModule();
+
                     return Page();
                 }
-				queryService.queryAddModule(moduleCode, moduleName, moduleDescription);
-				studentList = queryService.QueryGET();
-				moduleList = queryService.QueryModule();
 
-				return Page();
+                queryService.queryAddStudent(studentName + " " + studentSurname, studentCourse);
+                studentList = queryService.QueryGET();
+                moduleList = queryService.QueryModule();
+
+                return Page();
+
             }
-						
-			queryService.queryAddStudent(studentName+" "+studentSurname,studentCourse);
-			studentList = queryService.QueryGET();
-			moduleList = queryService.QueryModule();
+            queryService.degregisterQuery(int.Parse(deregister));
+            studentList = queryService.QueryGET();
+            moduleList = queryService.QueryModule();
 
-			return Page();
+            return Page();
         }
 
         public void OnGet()

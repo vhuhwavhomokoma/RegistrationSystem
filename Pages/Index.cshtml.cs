@@ -54,8 +54,9 @@ namespace RegistrationSystem.Pages
 
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     Page();
                 }
             }
@@ -96,8 +97,9 @@ namespace RegistrationSystem.Pages
 
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     Page();
                 }
             }
@@ -115,6 +117,8 @@ namespace RegistrationSystem.Pages
 
             if (usrnm.Substring(0, 1) == "a")
             {
+                Console.WriteLine(usrnm);
+                Console.WriteLine(pw);
                 QueryAdmin();
                 List<Administrator> admins = AdministratorList;
                 for (int i = 0; i < admins.Count; i++)
@@ -129,6 +133,7 @@ namespace RegistrationSystem.Pages
                     return Page();
                 }
                 QueryGET();
+            
                 List<Student> students = StudentList;
                 for (int i = 0; i < students.Count; i++)
                 {
