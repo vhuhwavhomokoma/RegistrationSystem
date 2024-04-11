@@ -14,6 +14,60 @@ namespace RegistrationSystem.Pages
 
         public static string Username { get; set; } = default!;
 
+        private bool updateAdminPassword()
+        {
+            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    // Specify the primary key value or any condition to identify the element to update
+
+
+                    // SQL command to update the element
+                    string updateElementSql = @"
+                UPDATE Administrators
+                SET adminpassword = @NewValue1
+                WHERE username = @PrimaryKeyValue";
+
+                    using (SqlCommand command = new SqlCommand(updateElementSql, connection))
+                    {
+                        // Set parameter values
+                        Console.WriteLine(Username);
+                        command.Parameters.AddWithValue("@NewValue1", newpassword);
+                        command.Parameters.AddWithValue("@PrimaryKeyValue", Username);
+
+                       
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            
+                            connection.Close();
+                            return true;
+                        }
+                        else
+                        {
+                    
+
+                            connection.Close();
+                            return false;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    return false;
+                }
+            }
+
+
+        }
+
         private bool updatePassword()
         {
             string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
@@ -79,8 +133,18 @@ namespace RegistrationSystem.Pages
         
             if (newpassword == confirmpassword)
             {
-                bool status = updatePassword();
-                Console.WriteLine(status);
+                
+                if (Username.Substring(0,1)=="u") {
+                    bool status2 = updatePassword();
+                    
+                    if (status2)
+                    {
+                        return RedirectToPage("/Index");
+                    }
+                    return Page();
+                }
+                bool status = updateAdminPassword();
+                
                 if (status)
                 {
                     return RedirectToPage("/Index");
