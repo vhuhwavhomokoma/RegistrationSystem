@@ -43,31 +43,41 @@ namespace RegistrationSystem.Pages
         public IActionResult OnPost()
         {
             QueryService queryService = new QueryService();
-            if (deregister ==null)
-            {
-                
-                if (studentName == null || studentSurname == null || studentEmail == null || studentCourse == null)
+            if (remove == null) {
+                if (deregister == null)
                 {
-                    if (moduleCode == null || moduleName == null || moduleDescription == null || moduleCourse == null)
+
+                    if (studentName == null || studentSurname == null || studentEmail == null || studentCourse == null)
                     {
+                        if (moduleCode == null || moduleName == null || moduleDescription == null || moduleCourse == null)
+                        {
+
+                            return Page();
+                        }
+                        queryService.queryAddModule(moduleCode, moduleName, moduleDescription);
+                        studentList = queryService.QueryGET();
+                        moduleList = queryService.QueryModule();
 
                         return Page();
                     }
-                    queryService.queryAddModule(moduleCode, moduleName, moduleDescription);
+
+                    queryService.queryAddStudent(studentName + " " + studentSurname, studentCourse);
                     studentList = queryService.QueryGET();
                     moduleList = queryService.QueryModule();
 
                     return Page();
-                }
 
-                queryService.queryAddStudent(studentName + " " + studentSurname, studentCourse);
+
+
+                }
+                queryService.degregisterQuery(int.Parse(deregister));
                 studentList = queryService.QueryGET();
                 moduleList = queryService.QueryModule();
 
                 return Page();
 
             }
-            queryService.degregisterQuery(int.Parse(deregister));
+            queryService.removeQuery(int.Parse(remove));
             studentList = queryService.QueryGET();
             moduleList = queryService.QueryModule();
 
