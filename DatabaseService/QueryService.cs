@@ -60,6 +60,56 @@ namespace RegistrationSystem.DatabaseService
 
         }
 
+		public void updateModule(string module)
+		{
+            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    // Specify the primary key value or any condition to identify the element to update
+                    string primaryKeyValue = module;
+
+                    // SQL command to update the element
+                    string updateElementSql = @"
+                UPDATE Modules
+                SET NumRegistered = NumRegistered + @NewValue1
+                WHERE ModuleCode = @PrimaryKeyValue";
+
+                    using (SqlCommand command = new SqlCommand(updateElementSql, connection))
+                    {
+                        // Set parameter values
+                        command.Parameters.AddWithValue("@NewValue1", 1);
+                        command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
+
+                        // Execute the command
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            // Update successful
+                            connection.Close();
+                            
+                        }
+                        else
+                        {
+                            // No matching element found for the update
+                            connection.Close();
+                            
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                   
+                }
+            }
+
+        }
+
 		public List<Models.Module> QueryModule()
 		{
 			string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
@@ -172,7 +222,58 @@ namespace RegistrationSystem.DatabaseService
                 {
                     connection.Open();
 
-                 
+                    string AlterModules = @"SELECT modulesRegistered FROM Students WHERE ID = @Value1";
+                    List<string> modulesReg = new List<string>();
+
+                    using (SqlCommand command = new SqlCommand(AlterModules, connection))
+                    {
+                        command.Parameters.AddWithValue("@Value1", studentid);
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                modulesReg = reader.GetString(0).Split(":").ToList();
+                               
+                            }
+
+
+                        }
+
+                    }
+
+                    
+
+                    string updateModuleQuery = @"UPDATE Modules SET NumRegistered = NumRegistered - @NewValue1 WHERE ModuleCode = @PrimaryKeyValue";
+
+                    for (int i = 1; i < modulesReg.Count; i++ )
+                    {
+                        using (SqlCommand command = new SqlCommand(updateModuleQuery, connection))
+                        {
+                            // Set parameter values
+                            command.Parameters.AddWithValue("@NewValue1", 1);
+                            command.Parameters.AddWithValue("@PrimaryKeyValue", modulesReg[i]);
+
+                            // Execute the command
+                            int rowsAffected = command.ExecuteNonQuery();
+
+                            if (rowsAffected > 0)
+                            {
+                                Console.WriteLine("Success");
+
+                            }
+                            else
+                            {
+                                Console.WriteLine("FAIL");
+
+                            }
+                        }
+
+
+
+                    }
+
+
+                    
 
                     string QueryDeregister = @"DELETE FROM Students WHERE ID = @Value1";
 
@@ -181,9 +282,11 @@ namespace RegistrationSystem.DatabaseService
                         command.Parameters.AddWithValue("@Value1", studentid);
 
                         int rowsAffected = command.ExecuteNonQuery();
-
-
+                    
                     }
+
+                    
+
                 }
                 catch (Exception e)
                 {

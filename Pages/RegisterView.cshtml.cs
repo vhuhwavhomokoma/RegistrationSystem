@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using RegistrationSystem.Models;
+using RegistrationSystem.DatabaseService;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -111,10 +112,10 @@ namespace RegistrationSystem.Pages
                 {
                     connection.Open();
 
-                    // Specify the primary key value or any condition to identify the element to update
+                
                     int primaryKeyValue = studentid;
 
-                    // SQL command to update the element
+                   
                     string updateElementSql = @"
                 UPDATE Students
                 SET modulesRegistered = modulesRegistered + @NewValue1
@@ -126,12 +127,12 @@ namespace RegistrationSystem.Pages
                         command.Parameters.AddWithValue("@NewValue1", module+":");
                         command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
 
-                        // Execute the command
+                       
                         int rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
                         {
-                            // Update successful
+                           
                             connection.Close();
                             return true;
                         }
@@ -167,8 +168,8 @@ namespace RegistrationSystem.Pages
                 {
                     usr = Int32.Parse(param1);
                 }
-
                 QueryModulesRegistered(usr);
+
 
                 if (courseRegistered.Contains(selected))
                 {
@@ -176,7 +177,9 @@ namespace RegistrationSystem.Pages
                 }
 
                 bool stst = updateStudent(usr,selected);
-
+                QueryService queryService = new QueryService();
+                queryService.updateModule(selected);
+                QueryModulesRegistered(usr);
                 QueryGET();
                
                 
