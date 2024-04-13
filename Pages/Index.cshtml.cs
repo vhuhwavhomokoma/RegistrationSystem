@@ -117,8 +117,7 @@ namespace RegistrationSystem.Pages
 
             if (usrnm.Substring(0, 1) == "a")
             {
-                Console.WriteLine(usrnm);
-                Console.WriteLine(pw);
+                
                 QueryAdmin();
                 List<Administrator> admins = AdministratorList;
                 for (int i = 0; i < admins.Count; i++)

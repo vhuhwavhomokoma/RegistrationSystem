@@ -59,9 +59,13 @@
 <div>
     @foreach (var regcourse in Model.courseRegistered)
     {
-     <p>
-         @regcourse
-     </p>   
+     <div>
+     <p>@regcourse</p>
+      <form method="post">
+         <input asp-for="deregister" value="@regcourse" type="hidden" />
+        <button type="submit" >Deregister</button>
+      </form>
+      </div><br />
     }
 
 </div>
