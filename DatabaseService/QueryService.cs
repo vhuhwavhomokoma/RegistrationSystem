@@ -378,7 +378,7 @@ namespace RegistrationSystem.DatabaseService
 							command.Parameters.AddWithValue("@Value3", nextusername);
 							command.Parameters.AddWithValue("@Value4", support.RandomPassword());
 							command.Parameters.AddWithValue("@Value5", course);
-							command.Parameters.AddWithValue("@Value6", "0:");
+							command.Parameters.AddWithValue("@Value6", "");
 
 						    int rowsAffected = command.ExecuteNonQuery();
 

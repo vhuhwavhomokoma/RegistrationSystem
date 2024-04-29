@@ -21,6 +21,7 @@
                         <div class="form-group">
                             <label for="value2">Password:</label>
                             <input type="password" id="value2" asp-for="pw" class="form-control" required />
+                            <img src="Icons/eye.svg" onmouseover="showPass();" onmouseout="hidePass();" />
                         </div>
                         <button type="submit" class="btn btn-primary btn-block" onclick="window.location.href='StudentView'">Sign In</button>
                     </form>
@@ -31,3 +32,14 @@
     </div>
 </div>
 
+<script>
+    function showPass() {
+        let obj = document.getElementById('value2');
+        obj.type = 'text';
+    }
+    function hidePass() {
+        let obj = document.getElementById('value2');
+        obj.type = 'password';
+    }
+
+</script>

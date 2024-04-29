@@ -88,7 +88,22 @@ namespace RegistrationSystem.Pages
                             {
 
                                 string value1 = reader.GetString(0);
-                                courseRegistered = value1.Split(':').ToList();
+                                if (value1!="")
+                                {
+                                    Console.WriteLine(value1);
+                                    List<string> temp = value1.Split(':').ToList();
+                                    courseRegistered.Clear();
+                                    for (int i = 0; i < temp.Count; i++)
+                                    {
+                                        if (temp[i]!="")
+                                        {
+                                            courseRegistered.Add(temp[i]);
+                                        }
+                                        
+
+                                    }
+                                }
+                               
 
 
                             }
@@ -175,7 +190,7 @@ namespace RegistrationSystem.Pages
                     using (SqlCommand command = new SqlCommand(updateElementSql, connection))
                     {
                       
-                        command.Parameters.AddWithValue("@NewValue1", module+":");
+                        command.Parameters.AddWithValue("@NewValue1", ":"+module);
                         command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
 
                        
@@ -277,6 +292,7 @@ namespace RegistrationSystem.Pages
                         update = update + ":" + courseRegistered[i];
                     }
                     update = update.Substring(1);
+                    Console.WriteLine(update);
                     updateStudentsModule(usr2, update);
                     deregisterSingleModule(deregister);
                     QueryModulesRegistered(usr2);

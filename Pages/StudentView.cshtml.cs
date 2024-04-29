@@ -85,9 +85,25 @@ namespace RegistrationSystem.Pages
                         {
                             while (reader.Read())
                             {
-
                                 string value1 = reader.GetString(0);
-                                courseRegistered = value1.Split(':').ToList();
+                                if (value1!="")
+                                {
+                                    Console.WriteLine(value1);
+                                    List<string> temp = value1.Split(':').ToList();
+                                    courseRegistered.Clear();
+                                    for (int i = 0; i < temp.Count; i++)
+                                    {
+                                        if (temp[i] != "")
+                                        {
+                                            courseRegistered.Add(temp[i]);
+                                        }
+
+
+                                    }
+                                }
+                                
+                                
+                               
 
 
                             }
