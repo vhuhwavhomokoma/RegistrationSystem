@@ -38,6 +38,8 @@
         <button type="button" class="collapsible">@student.UserName</button>
         <div class="content">
             <p>@student.UserName</p>
+            <p>@student.StudentName</p>
+            <p>@student.Course</p>
             <form method="post">
                 <input asp-for="deregister" type="hidden" value="@student.StudentId"/>
                 <button type="submit">Deregister</button>

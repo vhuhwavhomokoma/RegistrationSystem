@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RegistrationSystem.DatabaseService;
 using RegistrationSystem.Models;
+using RegistrationSystem.Security;
 
 namespace RegistrationSystem.Pages
 {
@@ -43,6 +44,7 @@ namespace RegistrationSystem.Pages
         public IActionResult OnPost()
         {
             QueryService queryService = new QueryService();
+            EncryptionService encryptionService = new EncryptionService();
             if (remove == null) {
                 if (deregister == null)
                 {
@@ -61,7 +63,7 @@ namespace RegistrationSystem.Pages
                         return Page();
                     }
 
-                    queryService.queryAddStudent(studentName + " " + studentSurname, studentCourse);
+                    queryService.queryAddStudent(encryptionService.Encrypt(studentName + " " + studentSurname),encryptionService.Encrypt(studentCourse));
                     studentList = queryService.QueryGET();
                     moduleList = queryService.QueryModule();
 

@@ -1,6 +1,7 @@
 ﻿using RegistrationSystem.Models;
 using System.Data.SqlClient;
 using RegistrationSystem.Supportfeatures;
+using RegistrationSystem.Security;
 
 namespace RegistrationSystem.DatabaseService
 {
@@ -13,6 +14,7 @@ namespace RegistrationSystem.DatabaseService
             string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
 
             List<Student> students = new List<Student>();
+            EncryptionService encryptionService = new EncryptionService();
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -20,24 +22,25 @@ namespace RegistrationSystem.DatabaseService
                 {
                     connection.Open();
 
-                    // SQL command to check if specific values are present
+                    
                     string queryAllDataSql = @"
                 SELECT username, studentpassword, ID, StudentName, course
                 FROM Students";
 
                     using (SqlCommand command = new SqlCommand(queryAllDataSql, connection))
                     {
-                        // Execute the command and read the result
+                        
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                // Access data using reader for each row
-                                string value1 = reader.GetString(0);
-                                string value2 = reader.GetString(1);  // Assuming Column2 is of type NVARCHAR
+                                
+                                string value1 = encryptionService.Decrypt(reader.GetString(0));
+                                Console.WriteLine(value1);
+                                string value2 = reader.GetString(1);  
                                 int value3 = reader.GetInt32(2);
-                                string value4 = reader.GetString(3);
-                                string value5 = reader.GetString(4);
+                                string value4 = encryptionService.Decrypt(reader.GetString(3));
+                                string value5 = encryptionService.Decrypt(reader.GetString(4));
                                 Student student = new Student(value1, value2, value3, value4, value5);
                                 students.Add(student);
 
@@ -337,6 +340,7 @@ namespace RegistrationSystem.DatabaseService
         public void queryAddStudent(string fullname,string course)
         {
 			string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+            EncryptionService encryptionService = new EncryptionService();
 
 
 			using (SqlConnection connection = new SqlConnection(connectionString))
@@ -358,11 +362,14 @@ namespace RegistrationSystem.DatabaseService
 							while (reader.Read())
 							{
 								lastIndex = reader.GetInt32(0);
-								string value2 = reader.GetString(1);
+								string value2 = encryptionService.Decrypt(reader.GetString(1));
 								nextusername = support.generateUsername(value2);
+                                nextusername = encryptionService.Encrypt(nextusername);
+                                Console.WriteLine(nextusername);
 
 
-							}
+
+                            }
 
 
 
