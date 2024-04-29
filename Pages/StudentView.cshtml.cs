@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using RegistrationSystem.Models;
+using RegistrationSystem.Security;
 
 namespace RegistrationSystem.Pages
 {
@@ -16,6 +17,8 @@ namespace RegistrationSystem.Pages
         private Student GetStudent(int student_id)
         {
             string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+            EncryptionService encryptionService = new EncryptionService();
+
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -40,10 +43,10 @@ namespace RegistrationSystem.Pages
                         if (reader.Read())
                         {
                             // Access data using reader
-                            string value1 = reader.GetString(0);
+                            string value1 = encryptionService.Decrypt(reader.GetString(0));
                             string value2 = reader.GetString(1);
-                            string value3 = reader.GetString(2);
-                            string value4 = reader.GetString(3);
+                            string value3 = encryptionService.Decrypt(reader.GetString(2));
+                            string value4 = encryptionService.Decrypt(reader.GetString(3));
 
                             return new Student(value1,value2,student_id,value3,value4);
 
