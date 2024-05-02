@@ -13,7 +13,7 @@
                     <h3 class="text-center">Sign In</h3>
                 </div>
                 <div class="card-body">
-                    <form method="post">
+                    <form method="post" onsubmit="return validateUsername()">
                         <div class="form-group">
                             <label for="value1">Username:</label>
                             <input id="value1" asp-for="usrnm" class="form-control" required />
@@ -23,6 +23,7 @@
                             <input type="password" id="value2" asp-for="pw" class="form-control" required />
                             <img src="Icons/eye.svg" onmouseover="showPass();" onmouseout="hidePass();" />
                         </div>
+                        <p id="error-message" style="color: red;"></p>
                         <button type="submit" class="btn btn-primary btn-block" onclick="window.location.href='StudentView'">Sign In</button>
                     </form>
                 </div>
@@ -41,5 +42,21 @@
         let obj = document.getElementById('value2');
         obj.type = 'password';
     }
+
+    function validateUsername() {
+        var enteredUsername = document.getElementById('value1').value;
+        var sliced = enteredUsername.slice(0, 1)
+        var expected1 = 'a';
+        var expected2 = 'u';
+
+        if (sliced !== expected1 && sliced !== expected2) {
+            // Display error message
+            document.getElementById('error-message').textContent = 'Incorrect username format. Username should be uXXXXXXX or aXXXXXXX';
+            return false; // Prevent form submission
+        }
+
+        return true; // Allow form submission
+    }
+
 
 </script>
