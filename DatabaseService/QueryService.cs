@@ -337,7 +337,7 @@ namespace RegistrationSystem.DatabaseService
 
 
 
-        public void queryAddStudent(string fullname,string course)
+        public void queryAddStudent(string fullname,string course,string email)
         {
 			string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
             EncryptionService encryptionService = new EncryptionService();
@@ -364,8 +364,8 @@ namespace RegistrationSystem.DatabaseService
 								lastIndex = reader.GetInt32(0);
 								string value2 = encryptionService.Decrypt(reader.GetString(1));
 								nextusername = support.generateUsername(value2);
-                                nextusername = encryptionService.Encrypt(nextusername);
-                                Console.WriteLine(nextusername);
+                                
+                                
 
 
 
@@ -376,18 +376,28 @@ namespace RegistrationSystem.DatabaseService
 						}
 					}
 
-						string QueryInsert = @"INSERT INTO Students(ID,StudentName,username,studentpassword,course,modulesRegistered) VALUES (@Value1,@Value2,@Value3,@Value4,@Value5,@Value6)";
+						string QueryInsert = @"INSERT INTO Students(ID,StudentName,username,studentpassword,course,modulesRegistered,email_address) VALUES (@Value1,@Value2,@Value3,@Value4,@Value5,@Value6,@Value7)";
 
 						using (SqlCommand command = new SqlCommand(QueryInsert, connection))
 						{
-							command.Parameters.AddWithValue("@Value1", lastIndex+1);
+                        string gen_pasword = support.RandomPassword();
+
+                            command.Parameters.AddWithValue("@Value1", lastIndex+1);
 							command.Parameters.AddWithValue("@Value2", fullname);
-							command.Parameters.AddWithValue("@Value3", nextusername);
-							command.Parameters.AddWithValue("@Value4", support.RandomPassword());
+							command.Parameters.AddWithValue("@Value3", encryptionService.Encrypt(nextusername));
+							command.Parameters.AddWithValue("@Value4", encryptionService.Encrypt(gen_pasword));
 							command.Parameters.AddWithValue("@Value5", course);
 							command.Parameters.AddWithValue("@Value6", "");
+                            command.Parameters.AddWithValue("@Value7",encryptionService.Encrypt(email));
 
 						    int rowsAffected = command.ExecuteNonQuery();
+
+                            if(rowsAffected > 0)
+                        {
+                            Authentication authentication = new Authentication();
+                            string bodytext = $"Greetings,\r\n\r\n You have been successfully added to the Registration System. Below are your login credentials to access the system:\r\n\r\nUsername: {nextusername}\r\nPassword: {gen_pasword}\r\nPlease use these credentials to log in to the system.\r\n\r\nFor security reasons, we recommend changing your password after your first login. If you encounter any issues or have questions regarding your account, please don't hesitate to reach out to our support team.";
+                            authentication.Email(bodytext,email,"REGISTERED IN SYSTEM");
+                        }
 
 
 					}

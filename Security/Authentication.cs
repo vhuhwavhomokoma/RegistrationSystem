@@ -9,7 +9,7 @@ namespace RegistrationSystem.Security
     {
         public Authentication() { }
 
-        public void Email(string emailtext, string receiver) {
+        public void Email(string emailtext, string receiver, string subject) {
             try
             {
                 string senderEmail = "v55218585@gmail.com";
@@ -18,9 +18,9 @@ namespace RegistrationSystem.Security
                 // Create a MailMessage object
                 MailMessage message = new MailMessage();
                 message.From = new MailAddress(senderEmail);
-                message.To.Add(new MailAddress("vhuhwavhomokoma@gmail.com"));
-                message.Subject = "Test Email";
-                message.Body = "This is a test email sent using System.Net.Mail with App Password.";
+                message.To.Add(new MailAddress(receiver));
+                message.Subject = subject;
+                message.Body = emailtext;
 
                 // Configure SMTP client
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);

@@ -48,10 +48,12 @@ namespace RegistrationSystem.Pages
                             {
                                 //Decrypt data in order for use in the system
                                 string value1 = encryptionService.Decrypt(reader.GetString(0));
-                                string value2 = reader.GetString(1);  
+                                string value2 = encryptionService.Decrypt(reader.GetString(1));
+                                
                                 int value3 = reader.GetInt32(2);
                                 string value4 = encryptionService.Decrypt(reader.GetString(3));
                                 string value5 = encryptionService.Decrypt(reader.GetString(4));
+                                
                                 //Create and add a student to the Student list
                                 Student student = new Student(value1, value2, value3, value4, value5);
                                 StudentList.Add(student);
@@ -63,7 +65,7 @@ namespace RegistrationSystem.Pages
                 }
                 catch (Exception ex)
                 {
-                    
+                    Console.WriteLine(ex);
                     Page();
                 }
             
@@ -149,7 +151,8 @@ namespace RegistrationSystem.Pages
                 QueryGET();
                 //Processing Student authentication
                 List<Student> students = StudentList;
-                for (int i = 0; i < students.Count; i++)
+               
+            for (int i = 0; i < students.Count; i++)
                 {
                     if (usrnm == students[i].UserName && pw == students[i].Password)
                     {

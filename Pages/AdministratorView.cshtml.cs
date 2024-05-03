@@ -63,7 +63,7 @@ namespace RegistrationSystem.Pages
                         return Page();
                     }
 
-                    queryService.queryAddStudent(encryptionService.Encrypt(studentName + " " + studentSurname),encryptionService.Encrypt(studentCourse));
+                    queryService.queryAddStudent(encryptionService.Encrypt(studentName + " " + studentSurname),encryptionService.Encrypt(studentCourse),studentEmail);
                     studentList = queryService.QueryGET();
                     moduleList = queryService.QueryModule();
 
