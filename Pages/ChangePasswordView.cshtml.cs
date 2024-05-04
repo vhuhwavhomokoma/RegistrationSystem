@@ -14,6 +14,12 @@ namespace RegistrationSystem.Pages
 
         private string _email;
 
+        private void queryAdminEmail()
+        {
+
+        }
+
+
         private void queryEmail(string username)
         {
             try { 

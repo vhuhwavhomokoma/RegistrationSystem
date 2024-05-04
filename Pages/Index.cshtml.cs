@@ -123,6 +123,8 @@ namespace RegistrationSystem.Pages
 
         public IActionResult OnPost()
         {
+            Logging logging = new Logging();
+
             if (pw == null || usrnm == null) //Ensure that both username and password are filled before authenticating
             {
                 return Page();
@@ -140,12 +142,12 @@ namespace RegistrationSystem.Pages
                 {
                     if (usrnm == admins[i].UserName && pw == admins[i].Password)
                     {
-                      
+                        logging.Logger(usrnm,"ADMIN LOG IN","SUCCESS");
                         return RedirectToPage("/AdministratorView");
 
                     }
                 }
-                
+                logging.Logger(usrnm,"ADMIN LOG IN","FAIL");
                 return Page();
                 }
                 QueryGET();
@@ -156,10 +158,11 @@ namespace RegistrationSystem.Pages
                 {
                     if (usrnm == students[i].UserName && pw == students[i].Password)
                     {
+                    logging.Logger(usrnm,"USER LOG IN","SUCCESS");
                         return RedirectToPage("/StudentView", new { id = students[i].StudentId });
                     }
                 }
-
+                logging.Logger(usrnm,"USER LOG IN","FAIL");
                 return Page();
 
             }

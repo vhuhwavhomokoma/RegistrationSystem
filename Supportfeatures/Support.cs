@@ -45,7 +45,8 @@ namespace RegistrationSystem.Supportfeatures
 			return "u"+newusername;
 		}
 
-		public string randomCode()
+
+        public string randomCode()
 		{
 
             Random random = new Random();

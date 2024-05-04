@@ -53,7 +53,7 @@ namespace RegistrationSystem.Pages
                     {
                         if (moduleCode == null || moduleName == null || moduleDescription == null || moduleCourse == null)
                         {
-
+                          
                             return Page();
                         }
                         queryService.queryAddModule(moduleCode, moduleName, moduleDescription);

@@ -28,9 +28,13 @@
         background-color: #f1f1f1;
     }
 
-</style>
+    .form-container {
+            display: flex; /* Use flexbox for layout */
+            justify-content: space-between; /* Distribute space between form elements */
+        }
 
-<h4>ADMIN PAGE</h4>
+</style>
+ <h4>ADMIN PAGE</h4>
 <p>CURRENT STUDENTS</p>
 <div class="text-center" style="height: 200px; overflow-y: scroll;">
     @foreach (var student in Model.studentList)
@@ -48,7 +52,6 @@
 
     }
 </div>
-
 
 <p>CURRENT MODULES</p>
 <div class="text-center" style="height: 200px; overflow-y: scroll;">
