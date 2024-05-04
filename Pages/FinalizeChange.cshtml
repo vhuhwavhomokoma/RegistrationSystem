@@ -16,8 +16,8 @@
                     <form method="post">
                         
                         <div class="form-group">
-                            <label for="bnum">VerificationCode(000-000-0000):</label>
-                            <input type="tel" id="bnum" class="form-control" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" />
+                            <label for="bnum">Verification Code(00000):</label>
+                            <input asp-for="verificationCode" id="bnum" class="form-control" required />
                         </div>
                         <div class="form-group">
                             <label for="bpassword">New Password:</label>

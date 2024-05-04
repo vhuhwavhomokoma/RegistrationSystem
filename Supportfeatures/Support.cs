@@ -45,6 +45,18 @@ namespace RegistrationSystem.Supportfeatures
 			return "u"+newusername;
 		}
 
+		public string randomCode()
+		{
+
+            Random random = new Random();
+
+            //random 5-digit code
+            int code = random.Next(10000, 100000);
+
+
+            return code.ToString();
+		}
+
 
 
 

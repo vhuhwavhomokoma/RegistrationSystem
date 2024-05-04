@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
+using RegistrationSystem.Security;
 
 namespace RegistrationSystem.Pages
 {
@@ -12,7 +13,12 @@ namespace RegistrationSystem.Pages
         [BindProperty]
         public string confirmpassword { get; set; } = default!;
 
+        [BindProperty]
+        public string verificationCode { get; set; } = default!;
+
         public static string Username { get; set; } = default!;
+
+        private static string code { get; set; } = default!;
 
         private bool updateAdminPassword()
         {
@@ -76,6 +82,8 @@ namespace RegistrationSystem.Pages
             {
                 try
                 {
+                    EncryptionService encryptionService = new EncryptionService();
+                    
                     connection.Open();
 
                     // Specify the primary key value or any condition to identify the element to update
@@ -89,10 +97,9 @@ namespace RegistrationSystem.Pages
 
                     using (SqlCommand command = new SqlCommand(updateElementSql, connection))
                     {
-                        // Set parameter values
-                        Console.WriteLine(Username);
-                        command.Parameters.AddWithValue("@NewValue1", newpassword);
-                        command.Parameters.AddWithValue("@PrimaryKeyValue", Username);
+                        
+                        command.Parameters.AddWithValue("@NewValue1", encryptionService.Encrypt(newpassword));
+                        command.Parameters.AddWithValue("@PrimaryKeyValue", encryptionService.Encrypt(Username));
 
                         // Execute the command
                         int rowsAffected = command.ExecuteNonQuery();
@@ -101,6 +108,7 @@ namespace RegistrationSystem.Pages
                         {
                             // Update successful
                             connection.Close();
+                            Console.WriteLine("Successful");
                             return true;
                         }
                         else
@@ -108,6 +116,7 @@ namespace RegistrationSystem.Pages
                             // No matching element found for the update
                             
                             connection.Close();
+                            Console.WriteLine("NOT EXECUTED");
                             return false;
                         }
                     }
@@ -126,40 +135,53 @@ namespace RegistrationSystem.Pages
         public IActionResult OnPost()
         {
             
-            if (newpassword == null || confirmpassword == null )
+            if (newpassword == null || confirmpassword == null  || verificationCode == null)
             {
                 return Page();
             }
         
             if (newpassword == confirmpassword)
             {
-                
+                Console.WriteLine(Username);
                 if (Username.Substring(0,1)=="u") {
-                    bool status2 = updatePassword();
+                    Console.WriteLine(verificationCode);
+                    Console.WriteLine(code);
+                    if (verificationCode==code)
+                    {
+                        Console.WriteLine("MATCH");
+                        bool status2 = updatePassword();
+
+                        if (status2)
+                        {
+                            return RedirectToPage("/Index");
+                        }
+                        return Page();
+                    }
+                    return Page();
                     
-                    if (status2)
+                }
+                if (verificationCode==code) {
+                    bool status = updateAdminPassword();
+
+                    if (status)
                     {
                         return RedirectToPage("/Index");
                     }
                     return Page();
+
                 }
-                bool status = updateAdminPassword();
-                
-                if (status)
-                {
-                    return RedirectToPage("/Index");
-                }
+
                 return Page();
-                
             }
 
             return Page();
         }
 
 
-        public void OnGet(string usr)
+        public void OnGet(string usr,string cd)
         {
             Username = usr;
+            code = cd;
             
         }
     }
