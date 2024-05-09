@@ -45,6 +45,7 @@ namespace RegistrationSystem.Pages
         {
             QueryService queryService = new QueryService();
             EncryptionService encryptionService = new EncryptionService();
+            
             if (remove == null) {
                 if (deregister == null)
                 {
@@ -57,6 +58,7 @@ namespace RegistrationSystem.Pages
                             return Page();
                         }
                         queryService.queryAddModule(moduleCode, moduleName, moduleDescription);
+                        
                         studentList = queryService.QueryGET();
                         moduleList = queryService.QueryModule();
 
@@ -64,6 +66,7 @@ namespace RegistrationSystem.Pages
                     }
 
                     queryService.queryAddStudent(encryptionService.Encrypt(studentName + " " + studentSurname),encryptionService.Encrypt(studentCourse),studentEmail);
+                    
                     studentList = queryService.QueryGET();
                     moduleList = queryService.QueryModule();
 

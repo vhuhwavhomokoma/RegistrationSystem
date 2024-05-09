@@ -164,7 +164,8 @@ namespace RegistrationSystem.DatabaseService
 			{
 				try
 				{
-					connection.Open();
+                    Logging logging = new Logging();
+                    connection.Open();
 					
 					int lastIndex = 0;
 					
@@ -200,6 +201,13 @@ namespace RegistrationSystem.DatabaseService
 						
 
 						int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected > 0) {
+                            logging.Logger("ADMIN","ADD NEW MODULE","SUCCESS"); 
+                        
+                        }else {
+                            logging.Logger("ADMIN", "ADD NEW MODULE", "FAIL");
+
+                        }
 
 
 					}
@@ -223,6 +231,7 @@ namespace RegistrationSystem.DatabaseService
             {
                 try
                 {
+                    Logging logging = new Logging();
                     connection.Open();
 
                     string AlterModules = @"SELECT modulesRegistered FROM Students WHERE ID = @Value1";
@@ -261,12 +270,13 @@ namespace RegistrationSystem.DatabaseService
 
                             if (rowsAffected > 0)
                             {
-                                Console.WriteLine("Success");
+                                
+                                logging.Logger("ADMIN", "DEREGISTER STUDENT", "SUCCESS");
 
                             }
                             else
                             {
-                                Console.WriteLine("FAIL");
+                                logging.Logger("ADMIN", "DEREGISTER STUDENT", "FAIL");
 
                             }
                         }
@@ -310,6 +320,8 @@ namespace RegistrationSystem.DatabaseService
             {
                 try
                 {
+                    Logging logging = new Logging();
+
                     connection.Open();
 
 
@@ -321,6 +333,14 @@ namespace RegistrationSystem.DatabaseService
                         command.Parameters.AddWithValue("@Value1", moduleid);
 
                         int rowsAffected = command.ExecuteNonQuery();
+                        if (rowsAffected > 0)
+                        {
+                            logging.Logger("ADMIN", "REMOVE MODULE", "SUCCESS");
+                        }
+                        else
+                        {
+                            logging.Logger("ADMIN", "REMOVE MODULE", "FAIL");
+                        }
 
 
                     }
@@ -347,7 +367,8 @@ namespace RegistrationSystem.DatabaseService
 			{
 				try
 				{
-					connection.Open();
+                    Logging logging = new Logging();
+                    connection.Open();
 					Support support = new Support();
 					int lastIndex = 0;
 					string nextusername = "";
@@ -395,8 +416,14 @@ namespace RegistrationSystem.DatabaseService
                             if(rowsAffected > 0)
                         {
                             Authentication authentication = new Authentication();
+                            
+                            logging.Logger("ADMIN", "ADD NEW STUDENT", "SUCCESS");
                             string bodytext = $"Greetings,\r\n\r\n You have been successfully added to the Registration System. Below are your login credentials to access the system:\r\n\r\nUsername: {nextusername}\r\nPassword: {gen_pasword}\r\nPlease use these credentials to log in to the system.\r\n\r\nFor security reasons, we recommend changing your password after your first login. If you encounter any issues or have questions regarding your account, please don't hesitate to reach out to our support team.";
                             authentication.Email(bodytext,email,"REGISTERED IN SYSTEM");
+                        }
+                        else
+                        {
+                            logging.Logger("ADMIN", "ADD NEW STUDENT", "FAIL");
                         }
 
 
