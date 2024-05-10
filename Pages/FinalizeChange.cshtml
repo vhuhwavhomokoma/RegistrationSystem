@@ -3,25 +3,79 @@
 @{
 }
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card mt-5">
-                <div class="card-header">
-                    <h3 class="text-center">Sign Up</h3>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+
+    html, body {
+        height: 60%;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-image: linear-gradient(to top, #FFFFFF 0%, #0000FF 100%);
+    }
+
+    .demo-container {
+        height: 60%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .btn-lg {
+        padding: 12px 26px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    ::placeholder {
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+
+    .form-control-lg {
+        font-size: 16px;
+        padding: 15px 15px;
+    }
+
+    .font-500 {
+        font-weight: 500;
+    }
+
+    .image-size-small {
+        width: 140px;
+        margin: 0 auto;
+    }
+
+        .image-size-small img {
+            width: 140px;
+            margin-bottom: -70px;
+        }
+</style>
+
+<link rel="stylesheet" href="https://cdn.lineicons.com/2.0/LineIcons.css">
+<div class="demo-container">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 col-12 mx-auto">
+                <div class="text-center image-size-small position-relative">
+                    <img src="https://annedece.sirv.com/Images/user-vector.jpg" class="rounded-circle p-2 bg-white">
+
                 </div>
-                <div class="card-body">
+                <div class="p-5 bg-white rounded shadow-lg">
+                    <h3 class="mb-2 text-center pt-5">Verification of Password Change</h3>
                     <form method="post">
-                        
+
                         <div class="form-group">
                             <label for="bnum">Verification Code(00000):</label>
                             <input asp-for="verificationCode" id="bnum" class="form-control" required />
                         </div>
                         <div class="form-group">
                             <label for="bpassword">New Password:</label>
-                            <input asp-for="newpassword"  id="bpassword" type="password" class="form-control" required />
+                            <input asp-for="newpassword" id="bpassword" type="password" class="form-control" required />
                             <img src="Icons/eye.svg" onmouseover="showPass();" onmouseout="hidePass();" />
                         </div>
                         <div class="form-group">
@@ -29,13 +83,17 @@
                             <input asp-for="confirmpassword" type="password" id="cpassword" class="form-control" required />
                             <img src="Icons/eye.svg" onmouseover="showPass2();" onmouseout="hidePass2();" />
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+                        <button type="submit" class="btn btn-primary btn-block">Complete Password Reset</button>
                     </form>
+                    <div class="text-center pt-4">
+                       
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <script>
     function showPass() {

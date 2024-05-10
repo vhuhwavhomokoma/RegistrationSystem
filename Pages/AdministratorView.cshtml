@@ -3,8 +3,28 @@
 @{
 }
 
-
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <style>
+    .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 250px;
+        padding-top: 50px;
+        background-color: #f8f9fa;
+        border-right: 1px solid #dee2e6;
+    }
+
+    .content {
+        margin-left: 250px; /* Adjust this value to match the width of the sidebar */
+        padding: 20px;
+    }
+
+    .hidden {
+        display: none; /* Hide content by default */
+    }
+
     .collapsible {
         background-color: #266af2;
         color: white;
@@ -34,6 +54,19 @@
         }
 
 </style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-3 sidebar">
+            <ul class="list-group">
+                <li class="list-group-item sidebar-item" data-target="content1">Entry 1</li>
+                <li class="list-group-item sidebar-item" data-target="content2">Entry 2</li>
+                <li class="list-group-item sidebar-item" data-target="content3">Entry 3</li>
+            </ul>
+        </div>
+
+<div id="content1" class="hidden">
  <h4>ADMIN PAGE</h4>
 <p>CURRENT STUDENTS</p>
 <div class="text-center" style="height: 200px; overflow-y: scroll;">
@@ -53,6 +86,10 @@
     }
 </div>
 
+</div>
+
+<div id="content2" class="hidden">
+
 <p>CURRENT MODULES</p>
 <div class="text-center" style="height: 200px; overflow-y: scroll;">
     @foreach (var module in Model.moduleList)
@@ -69,6 +106,9 @@
     }
 </div>
 
+</div>
+
+<div id="content3" class="hidden">
 
 <h7>ADD NEW STUDENT</h7>
 
@@ -102,11 +142,13 @@
 
 </form>
 
+</div>
 
+    </div>
+
+</div>
 
 <script>
-
-
     var coll = document.getElementsByClassName("collapsible");
     var i;
 
@@ -121,4 +163,16 @@
             }
         });
     }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.sidebar-item').click(function () {
+            var target = $(this).data('target');
+            $('.content > div').addClass('hidden'); // Hide all content divs
+            $('#' + target).removeClass('hidden'); // Show the selected content div
+        });
+    });
+
 </script>
