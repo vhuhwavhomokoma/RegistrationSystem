@@ -57,6 +57,9 @@ namespace RegistrationSystem.DatabaseService
                 }
                 catch (Exception)
                 {
+                    Logging logging = new Logging();
+                    logging.Logger("USER","CONNECTION","TIMEOUT");
+
                     return students;
                 }
             }
@@ -69,6 +72,7 @@ namespace RegistrationSystem.DatabaseService
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                Logging logging = new Logging();
                 try
                 {
                     connection.Open();
@@ -93,7 +97,7 @@ namespace RegistrationSystem.DatabaseService
 
                         if (rowsAffected > 0)
                         {
-                            // Update successful
+                            
                             connection.Close();
                             
                         }
@@ -105,9 +109,9 @@ namespace RegistrationSystem.DatabaseService
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                   
+                    logging.Logger("USER","CONNECTION","TIMEOUT");
                 }
             }
 
@@ -115,43 +119,50 @@ namespace RegistrationSystem.DatabaseService
 
 		public List<Models.Module> QueryModule()
 		{
-			string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+            try
+            {
+                string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
 
-			List<Models.Module> modules = new List<Models.Module>();
+                List<Models.Module> modules = new List<Models.Module>();
 
-			using (SqlConnection connection = new SqlConnection(connectionString))
-			{
-				connection.Open();
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
 
-				// SQL command to check if specific values are present
-				string queryAllDataSql = @"
+                    // SQL command to check if specific values are present
+                    string queryAllDataSql = @"
                 SELECT ID, ModuleCode, ModuleName, ModuleDetails, NumRegistered
                 FROM Modules";
 
-				using (SqlCommand command = new SqlCommand(queryAllDataSql, connection))
-				{
-					// Execute the command and read the result
-					using (SqlDataReader reader = command.ExecuteReader())
-					{
-						while (reader.Read())
-						{
-							// Access data using reader for each row
-							int value1 = reader.GetInt32(0);
-							string value2 = reader.GetString(1);
-							string value3 = reader.GetString(2);
-							string value4 = reader.GetString(3);
-							int value5 = reader.GetInt32(4);
-							Models.Module module = new Models.Module(value1, value2, value3, value4, value5);
-							modules.Add(module);
+                    using (SqlCommand command = new SqlCommand(queryAllDataSql, connection))
+                    {
+                        // Execute the command and read the result
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                // Access data using reader for each row
+                                int value1 = reader.GetInt32(0);
+                                string value2 = reader.GetString(1);
+                                string value3 = reader.GetString(2);
+                                string value4 = reader.GetString(3);
+                                int value5 = reader.GetInt32(4);
+                                Models.Module module = new Models.Module(value1, value2, value3, value4, value5);
+                                modules.Add(module);
 
-						}
+                            }
 
-						return modules;
+                            return modules;
 
-					}
+                        }
 
-				}
-			}
+                    }
+                }
+            }catch (Exception)
+            {
+                
+                return new List<Models.Module>();
+            }
 
 		}
 
@@ -162,9 +173,10 @@ namespace RegistrationSystem.DatabaseService
 
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				try
+                Logging logging = new Logging();
+                try
 				{
-                    Logging logging = new Logging();
+                    
                     connection.Open();
 					
 					int lastIndex = 0;
@@ -212,10 +224,10 @@ namespace RegistrationSystem.DatabaseService
 
 					}
 				}
-				catch (Exception e)
+				catch (Exception)
 				{
-					Console.WriteLine(e.Message);
-				}
+                    logging.Logger("ADMIN", "CONNECTION", "TIMEOUT");
+                }
 			}
 
 
@@ -229,9 +241,10 @@ namespace RegistrationSystem.DatabaseService
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                Logging logging = new Logging();
                 try
                 {
-                    Logging logging = new Logging();
+                    
                     connection.Open();
 
                     string AlterModules = @"SELECT modulesRegistered FROM Students WHERE ID = @Value1";
@@ -301,9 +314,9 @@ namespace RegistrationSystem.DatabaseService
                     
 
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    Console.WriteLine(e.Message);
+                    logging.Logger("ADMIN", "CONNECTION", "TIMEOUT");
                 }
             }
 
@@ -316,11 +329,12 @@ namespace RegistrationSystem.DatabaseService
             string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
 
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
+            using (SqlConnection connection = new SqlConnection(connectionString)) { 
+                Logging logging = new Logging();
+
+            try
                 {
-                    Logging logging = new Logging();
+                    
 
                     connection.Open();
 
@@ -345,9 +359,10 @@ namespace RegistrationSystem.DatabaseService
 
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    Console.WriteLine(e.Message);
+                    logging.Logger("ADMIN", "CONNECTION", "TIMEOUT");
+                    
                 }
             }
 
@@ -365,9 +380,10 @@ namespace RegistrationSystem.DatabaseService
 
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				try
+                Logging logging = new Logging();
+                try
 				{
-                    Logging logging = new Logging();
+                    
                     connection.Open();
 					Support support = new Support();
 					int lastIndex = 0;
@@ -429,9 +445,9 @@ namespace RegistrationSystem.DatabaseService
 
 					}
 					}
-				catch (Exception e)
+				catch (Exception)
 				{
-					Console.WriteLine(e.Message);
+                    logging.Logger("ADMIN","CONNECTION","TIMEOUT");
 				}
 			}
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data.SqlClient;
 using RegistrationSystem.Models;
 using RegistrationSystem.DatabaseService;
+using RegistrationSystem.Security;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -27,37 +28,45 @@ namespace RegistrationSystem.Pages
 
         private void QueryGET()
         {
-            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                connection.Open();
+                string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
 
-                
-                string queryAllDataSql = @"
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+
+
+                    string queryAllDataSql = @"
                 SELECT ID, ModuleCode, ModuleName, ModuleDetails, NumRegistered
                 FROM Modules";
 
-                using (SqlCommand command = new SqlCommand(queryAllDataSql, connection))
-                {
-                
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlCommand command = new SqlCommand(queryAllDataSql, connection))
                     {
-                        while (reader.Read())
-                        {
-                           
-                            int value1 = reader.GetInt32(0);
-                            string value2 = reader.GetString(1);  
-                            string value3 = reader.GetString(2);
-                            string value4 = reader.GetString(3);
-                            int value5 = reader.GetInt32(4);
-                            Module module = new Module(value1,value2,value3,value4,value5);
-                            ModuleList.Add(module);
-                            
-                        }
-                    }
 
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+
+                                int value1 = reader.GetInt32(0);
+                                string value2 = reader.GetString(1);
+                                string value3 = reader.GetString(2);
+                                string value4 = reader.GetString(3);
+                                int value5 = reader.GetInt32(4);
+                                Module module = new Module(value1, value2, value3, value4, value5);
+                                ModuleList.Add(module);
+
+                            }
+                        }
+
+                    }
                 }
+            }catch (Exception)
+            {
+                Logging logging = new Logging();
+                logging.Logger("USER","CONNECTION","TIMEOUT");
+
             }
 
         }
@@ -111,9 +120,10 @@ namespace RegistrationSystem.Pages
 
                     }
 
-                }catch (Exception ex)
+                }catch (Exception)
                 {
-                    Console.WriteLine(ex.Message);
+                    Logging logging = new Logging();
+                    logging.Logger("USER", "CONNECTION", "TIMEOUT");
                 }
             }
 
@@ -125,6 +135,7 @@ namespace RegistrationSystem.Pages
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
+                Logging logging = new Logging();
                 try
                 {
                     connection.Open();
@@ -149,19 +160,20 @@ namespace RegistrationSystem.Pages
 
                         if (rowsAffected > 0)
                         {
-                            Console.WriteLine("Successfully Updated");
+                            
+                            logging.Logger(studentid.ToString(),"UPDATE MODULES","SUCCESS");
                            
                         }
                         else
                         {
-                           Console.WriteLine("NOT UPDATED");
+                            logging.Logger(studentid.ToString(), "UPDATE MODULES", "FAIL");
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex.Message);
-                   
+                    logging.Logger("USER", "CONNECTION", "TIMEOUT");
+
                 }
             }
 
@@ -210,9 +222,10 @@ namespace RegistrationSystem.Pages
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex.Message);
+                    Logging logging = new Logging();
+                    logging.Logger("USER", "CONNECTION", "TIMEOUT");
                     return false;
                 }
             }
@@ -223,6 +236,7 @@ namespace RegistrationSystem.Pages
 
         private void deregisterSingleModule(string modulecode)
         {
+            Logging logging = new Logging();
             try
             {
                 string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
@@ -241,24 +255,16 @@ namespace RegistrationSystem.Pages
                     // Execute the command
                     int rowsAffected = command.ExecuteNonQuery();
 
-                    if (rowsAffected > 0)
-                    {
-                        Console.WriteLine("Success");
-
-                    }
-                    else
-                    {
-                        Console.WriteLine("FAIL");
-
-                    }
+                    
+                    
                 }
 
 
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.Write(ex.Message);
+                logging.Logger("USER","CONNECTION","TIMEOUT");
             }
         }
 
@@ -269,6 +275,7 @@ namespace RegistrationSystem.Pages
 
         public IActionResult OnPost()
         {
+            Logging logging = new Logging(); 
             if (searchquery == null)
             {
                 if (selected == null)
@@ -292,7 +299,7 @@ namespace RegistrationSystem.Pages
                         update = update + ":" + courseRegistered[i];
                     }
                     update = update.Substring(1);
-                    Console.WriteLine(update);
+                    logging.Logger(usr2.ToString(),"DEREGISTER MODULE","SUCCESS");
                     updateStudentsModule(usr2, update);
                     deregisterSingleModule(deregister);
                     QueryModulesRegistered(usr2);
@@ -313,9 +320,8 @@ namespace RegistrationSystem.Pages
                 {
                     return RedirectToPage("/Privacy");
                 }
-
+                logging.Logger(usr.ToString(),"REGISTER MODULE","SUCCESS");
                 bool stst = updateStudent(usr,selected);
-                
                 QueryService queryService = new QueryService();
                 queryService.updateModule(selected);
                 QueryModulesRegistered(usr);

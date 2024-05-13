@@ -2,58 +2,41 @@
 @model RegistrationSystem.Pages.StudentViewModel
 @{
 }
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .status-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 5px;
+        transition: opacity 0.5s ease-in-out; /* CSS transition for opacity */
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Dashboard</title>
-    <!-- Add any additional stylesheets or CSS frameworks here -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
+    .online {
+        background-color: #28a745; /* Green */
+    }
+
+    .offline {
+        background-color: #dc3545; /* Red */
+    }
+</style>
 
 
-
-
-        nav {
-            background-color: #444;
-            color: #818181;
-            padding: 10px;
-            text-align: center;
-        }
-
-            nav a {
-                color: #818181;
-                text-decoration: none;
-                padding: 10px;
-                margin: 0 10px;
-            }
-
-        main {
-            padding: 20px;
-        }
-
-   
-        .dashboard-component {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-</head>
 <body>
-
+    <img src="https://annedece.sirv.com/Images/user-vector.jpg" class="rounded-circle p-2 bg-white">
+    <div class="container mt-5">
+        <div>
+            <span>@Model.studentUser.StudentName:</span>
+            <span id="statusIndicator" class="status-indicator"></span>
+            <span id="statusText"></span>
+        </div>
+    </div>
     <main>
-        <p>@Model.studentUser.StudentName</p>
+        <p></p>
         <p>@Model.studentUser.UserName</p>
         <p>@Model.studentUser.Course</p>
-        <div class="dashboard-component">
+        <div>
             <h2>Enrolled Modules</h2>
             @foreach (var module in Model.courseRegistered)
             {
@@ -63,7 +46,53 @@
             
         </div>
         <button onclick="window.location.href='/RegisterView?User=@Model.studentId'">Register</button>
+      
     </main>
+
+    
+
 
 
 </body>
+
+
+ <script>
+      
+        const isUserOnline = true;
+
+        
+        function updateUserStatus() {
+            const statusIndicator = document.getElementById('statusIndicator');
+            const statusText = document.getElementById('statusText');
+
+            if (isUserOnline) {
+                statusIndicator.classList.add('online');
+                statusIndicator.classList.remove('offline');
+                statusText.textContent = 'Online';
+                blinkStatusIndicator(); 
+            } else {
+                statusIndicator.classList.add('offline');
+                statusIndicator.classList.remove('online');
+                statusText.textContent = 'Offline';
+                stopBlinking(); 
+            }
+        }
+
+        // Function to toggle blinking effect
+        function blinkStatusIndicator() {
+            const statusIndicator = document.getElementById('statusIndicator');
+            setInterval(() => {
+                statusIndicator.style.opacity = (statusIndicator.style.opacity === '0' ? '1' : '0');
+            }, 500); 
+        }
+
+        // Function to stop blinking effect
+        function stopBlinking() {
+            const statusIndicator = document.getElementById('statusIndicator');
+            statusIndicator.style.opacity = '1'; e
+            clearInterval(); 
+        }
+
+       
+        updateUserStatus();
+    </script>

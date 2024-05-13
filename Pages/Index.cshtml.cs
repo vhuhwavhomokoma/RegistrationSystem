@@ -63,9 +63,10 @@ namespace RegistrationSystem.Pages
 
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex);
+                    Logging logging = new Logging();
+                    logging.Logger(usrnm,"CONNECTION","TIMEOUT");
                     Page();
                 }
             
@@ -110,9 +111,10 @@ namespace RegistrationSystem.Pages
 
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    
+                Logging logging = new Logging();
+                logging.Logger(usrnm,"CONNECTION","TIMEOUT");
                     Page();
                 }
             
