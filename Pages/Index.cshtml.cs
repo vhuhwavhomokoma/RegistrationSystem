@@ -16,6 +16,12 @@ namespace RegistrationSystem.Pages
         [BindProperty]
         public string pw { get; set; } = default!;
 
+        [BindProperty]
+        public string verify { get; set; } = default!;
+
+        [BindProperty]
+        public string connection { get; set; } = default!;
+
         public List<Student> StudentList = new List<Student>();
 
         public List<Administrator> AdministratorList = new List<Administrator>();
@@ -26,7 +32,7 @@ namespace RegistrationSystem.Pages
 
         private void QueryGET()
         {
-            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=45;";
             //initialise encryption service to encrypt or decrypt student data
             EncryptionService encryptionService = new EncryptionService();
 
@@ -47,9 +53,10 @@ namespace RegistrationSystem.Pages
                             while (reader.Read())
                             {
                                 //Decrypt data in order for use in the system
+                                
                                 string value1 = encryptionService.Decrypt(reader.GetString(0));
                                 string value2 = encryptionService.Decrypt(reader.GetString(1));
-                                
+                                Console.WriteLine(value1);
                                 int value3 = reader.GetInt32(2);
                                 string value4 = encryptionService.Decrypt(reader.GetString(3));
                                 string value5 = encryptionService.Decrypt(reader.GetString(4));
@@ -79,7 +86,7 @@ namespace RegistrationSystem.Pages
 
         private void QueryAdmin()
         {
-            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=45;";
 
             
                 try
@@ -125,6 +132,7 @@ namespace RegistrationSystem.Pages
 
         public IActionResult OnPost()
         {
+            verify = "CHECK";
             Logging logging = new Logging();
 
             if (pw == null || usrnm == null) //Ensure that both username and password are filled before authenticating
@@ -149,22 +157,26 @@ namespace RegistrationSystem.Pages
 
                     }
                 }
+                verify = "INCORRECT";
                 logging.Logger(usrnm,"ADMIN LOG IN","FAIL");
                 return Page();
                 }
                 QueryGET();
                 //Processing Student authentication
                 List<Student> students = StudentList;
-               
+            Console.WriteLine(students.Count);
+
             for (int i = 0; i < students.Count; i++)
                 {
+                
                     if (usrnm == students[i].UserName && pw == students[i].Password)
                     {
                     logging.Logger(usrnm,"USER LOG IN","SUCCESS");
                         return RedirectToPage("/StudentView", new { id = students[i].StudentId });
                     }
                 }
-                logging.Logger(usrnm,"USER LOG IN","FAIL");
+            verify = "INCORRECT";
+            logging.Logger(usrnm,"USER LOG IN","FAIL");
                 return Page();
 
             }

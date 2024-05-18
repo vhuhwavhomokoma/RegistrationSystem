@@ -1,19 +1,33 @@
 ﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using System.Security.Cryptography;
 using System.Text;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using System.Threading.Tasks;
 
 
 namespace RegistrationSystem.Security
 {
     public class EncryptionService
     {
+        private readonly SecretClient _secretClient;
+        private const string KeyName = "RegSystemKey1";
         //Encryption and Decryption using AES
-        public EncryptionService() { }
+        public EncryptionService() {
+            var keyVaultUri = "https://regsyskey.vault.azure.net/";
+            _secretClient = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
+        }
+
+        private string GetEncryptionKeyAsync()
+        {
+            var secret =  _secretClient.GetSecret(KeyName);
+            return secret.Value.Value;
+        }
 
         public string Encrypt(string plaintext)
         {
-            string key = "1234567891234567";
-
+            string key = GetEncryptionKeyAsync();
+            
             Aes aes = Aes.Create();
             
             aes.Key = Encoding.UTF8.GetBytes(key);
@@ -47,8 +61,8 @@ namespace RegistrationSystem.Security
         public string Decrypt(string encryptedtext)
         {
 
-            string key = "1234567891234567";
-
+            string key = GetEncryptionKeyAsync();
+            
             byte[] cipherText = Convert.FromBase64String(encryptedtext); ;
 
 

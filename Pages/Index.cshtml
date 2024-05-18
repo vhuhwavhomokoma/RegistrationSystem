@@ -71,6 +71,10 @@
                             <img src="Icons/eye.svg" onmouseover="showPass();" onmouseout="hidePass();" />
                         </div>
                         <p id="error-message" style="color: red;"></p>
+                        @if (Model.verify == "INCORRECT")
+                        {
+                            <p id="error-message2" style="color: red;">Incorrect Password</p>
+                        } 
                         <button type="submit" class="btn btn-primary btn-block" onclick="window.location.href='StudentView'">Sign In</button>
                     </form>
                     <div class="text-center pt-4">

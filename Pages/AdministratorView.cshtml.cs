@@ -41,7 +41,7 @@ namespace RegistrationSystem.Pages
         [BindProperty]
         public string remove { get; set; } = default!;
 
-        public IActionResult OnPost()
+        public  IActionResult OnPost()
         {
             QueryService queryService = new QueryService();
             EncryptionService encryptionService = new EncryptionService();
@@ -65,7 +65,7 @@ namespace RegistrationSystem.Pages
                         return Page();
                     }
 
-                    queryService.queryAddStudent(encryptionService.Encrypt(studentName + " " + studentSurname),encryptionService.Encrypt(studentCourse),studentEmail);
+                    queryService.queryAddStudent(encryptionService.Encrypt(studentName + " " + studentSurname), encryptionService.Encrypt(studentCourse),studentEmail);
                     
                     studentList = queryService.QueryGET();
                     moduleList = queryService.QueryModule();

@@ -10,7 +10,7 @@
         top: 0;
         bottom: 0;
         left: 0;
-        width: 250px;
+        width: 150px;
         padding-top: 50px;
         background-color: #f8f9fa;
         border-right: 1px solid #dee2e6;
@@ -41,7 +41,7 @@
             background-color: #0d3890;
         }
 
-    .content {
+    .content2 {
         padding: 0 18px;
         display: none;
         overflow: hidden;
@@ -53,6 +53,18 @@
             justify-content: space-between; /* Distribute space between form elements */
         }
 
+    .inline-block-container {
+        font-size: 0; /* Remove space between inline-block elements */
+    }
+
+    .inline-block {
+        display: inline-block;
+        width: 40%;
+        margin: 2.5%;
+        box-sizing: border-box;
+        font-size: 16px; /* Reset font-size */
+    }
+
 </style>
 
 <div class="container-fluid">
@@ -60,20 +72,20 @@
         <!-- Sidebar -->
         <div class="col-3 sidebar">
             <ul class="list-group">
-                <li class="list-group-item sidebar-item" data-target="content1">Entry 1</li>
-                <li class="list-group-item sidebar-item" data-target="content2">Entry 2</li>
-                <li class="list-group-item sidebar-item" data-target="content3">Entry 3</li>
+                <li class="list-group-item sidebar-item" data-target="content1">Current Students</li>
+                <li class="list-group-item sidebar-item" data-target="content2">Current Modules</li>
+                <li class="list-group-item sidebar-item" data-target="content3">Add Students & Modules</li>
             </ul>
         </div>
 
 <div id="content1" class="hidden">
- <h4>ADMIN PAGE</h4>
+ 
 <p>CURRENT STUDENTS</p>
-<div class="text-center" style="height: 200px; overflow-y: scroll;">
+<div class="text-center" style="height: 140px; overflow-y: scroll;">
     @foreach (var student in Model.studentList)
     {
         <button type="button" class="collapsible">@student.UserName</button>
-        <div class="content">
+        <div class="content2">
             <p>@student.UserName</p>
             <p>@student.StudentName</p>
             <p>@student.Course</p>
@@ -91,11 +103,11 @@
 <div id="content2" class="hidden">
 
 <p>CURRENT MODULES</p>
-<div class="text-center" style="height: 200px; overflow-y: scroll;">
+<div class="text-center" style="height: 140px; overflow-y: scroll;">
     @foreach (var module in Model.moduleList)
     {
         <button type="button" class="collapsible">@module.ModuleName</button>
-        <div class="content">
+        <div class="content2">
             <p>@module.ModuleName</p>
             <form method="post">
                 <input asp-for= "remove" type="hidden" value="@module.Id"/>
@@ -108,8 +120,10 @@
 
 </div>
 
-<div id="content3" class="hidden">
+<div class="inline-block-container">
 
+<div id="content3" class="hidden">
+<div class="inline-block" style="height: 150px;">
 <h7>ADD NEW STUDENT</h7>
 
 <form method="post">
@@ -125,8 +139,9 @@
 
 </form>
 
-<br />
+</div>
 
+<div class="inline-block" style="height: 150px;">
 <h7>ADD NEW MODULE</h7>
 
 <form method="post">
@@ -137,13 +152,15 @@
 	<label>Description</label>
 	<input asp-for="moduleDescription" type="text" /><br />
 	<label>Course</label>
-	<input asp-for="moduleCourse" type="text" />
+	<input asp-for="moduleCourse" type="text" /><br/>
 	<button>CREATE Module</button>
 
 </form>
 
 </div>
+</div>
 
+</div>
     </div>
 
 </div>

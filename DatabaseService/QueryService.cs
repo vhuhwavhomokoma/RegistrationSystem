@@ -36,7 +36,7 @@ namespace RegistrationSystem.DatabaseService
                             {
                                 
                                 string value1 = encryptionService.Decrypt(reader.GetString(0));
-                                Console.WriteLine(value1);
+                                
                                 string value2 = reader.GetString(1);  
                                 int value3 = reader.GetInt32(2);
                                 string value4 = encryptionService.Decrypt(reader.GetString(3));
@@ -445,8 +445,9 @@ namespace RegistrationSystem.DatabaseService
 
 					}
 					}
-				catch (Exception)
+				catch (Exception ex)
 				{
+                    Console.WriteLine(ex.Message);
                     logging.Logger("ADMIN","CONNECTION","TIMEOUT");
 				}
 			}

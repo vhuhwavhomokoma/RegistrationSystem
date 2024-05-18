@@ -12,7 +12,7 @@ namespace RegistrationSystem.Pages
         [BindProperty]
         public string enteredUsername { get; set; } = default!;
 
-        private string _email;
+        private string _email { get; set; } = default!;
 
         private void queryAdminEmail()
         {
