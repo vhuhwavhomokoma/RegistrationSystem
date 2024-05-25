@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using RegistrationSystem.Models;
 using System.Xml.Linq;
 using RegistrationSystem.Security;
+using RegistrationSystem.Supportfeatures;
 
 
 namespace RegistrationSystem.Pages
@@ -152,8 +153,13 @@ namespace RegistrationSystem.Pages
                 {
                     if (usrnm == admins[i].UserName && pw == admins[i].Password)
                     {
-                        logging.Logger(usrnm,"ADMIN LOG IN","SUCCESS");
-                        return RedirectToPage("/AdministratorView");
+                        logging.Logger(usrnm,"ADMIN LOG IN","SUCCESS"); 
+                        Support support = new Support();
+                        string code = support.randomCode();
+                        Authentication authentication = new Authentication();
+                        string emailtext = $"Greetings,\r\n\r\n We have received an Administrator login request. To proceed with the login, please use the following verification code:\r\n\r\nVerification Code: {code}\r\n\r\nPlease enter this code on the verification page to confirm your identity and proceed with logging in. If you did not request this please contact our support team immediately for assistance. ";
+                        authentication.Email(emailtext, "vhuhwavhomokoma@gmail.com", "VERIFY LOGIN");
+                        return RedirectToPage("/AdminAuthentication", new { cd = code });
 
                     }
                 }
@@ -164,7 +170,7 @@ namespace RegistrationSystem.Pages
                 QueryGET();
                 //Processing Student authentication
                 List<Student> students = StudentList;
-            Console.WriteLine(students.Count);
+            
 
             for (int i = 0; i < students.Count; i++)
                 {
@@ -177,6 +183,9 @@ namespace RegistrationSystem.Pages
                 }
             verify = "INCORRECT";
             logging.Logger(usrnm,"USER LOG IN","FAIL");
+            Monitoring monitoring = new Monitoring();
+            monitoring.MonitorUSERAcvitiy();
+
                 return Page();
 
             }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using RegistrationSystem.DatabaseService;
 using RegistrationSystem.Models;
 using RegistrationSystem.Security;
 using RegistrationSystem.Supportfeatures;
@@ -12,12 +13,8 @@ namespace RegistrationSystem.Pages
         [BindProperty]
         public string enteredUsername { get; set; } = default!;
 
-        private string _email { get; set; } = default!;
+        private string email { get; set; } = default!;
 
-        private void queryAdminEmail()
-        {
-
-        }
 
 
         private void queryEmail(string username)
@@ -44,7 +41,7 @@ namespace RegistrationSystem.Pages
                         while (reader.Read())
                         {
                             //Decrypt data in order for use in the system
-                            _email = encryptionService.Decrypt(reader.GetString(0));
+                            email = encryptionService.Decrypt(reader.GetString(0));
                             
                    
                         }
@@ -67,18 +64,39 @@ namespace RegistrationSystem.Pages
                 
                 return Page();
             }
-           
-            queryEmail(enteredUsername);
-            Authentication authentication = new Authentication();
-            Support support = new Support();
-            string code = support.randomCode();
+
+            if (enteredUsername.Substring(0, 1) == "a")
+            {
+
+                QueryService query = new QueryService();
+                string admin_email = query.QueryAdminEmail();
+                Authentication authentication2 = new Authentication();
+                Support support2 = new Support();
+                string code2 = support2.randomCode();
+                string emailtext2 = $"Greetings,\r\n\r\n We have received a request to change the password associated with your account. To proceed with this change, please use the following verification code:\r\n\r\nVerification Code: {code2}\r\n\r\nPlease enter this code on the password change page to confirm your identity and proceed with updating your password. If you did not request this change or have any concerns, please contact our support team immediately for assistance. ";
+                authentication2.Email(emailtext2, admin_email, "CHANGE PASSWORD CODE");
+                return RedirectToPage("/FinalizeChange", new { usr = enteredUsername, cd = code2 });
+
+            }
+            else
+            {
+
+                queryEmail(enteredUsername);
+                Authentication authentication = new Authentication();
+                Support support = new Support();
+                string code = support.randomCode();
+
+
+                string emailtext = $"Greetings,\r\n\r\n We have received a request to change the password associated with your account. To proceed with this change, please use the following verification code:\r\n\r\nVerification Code: {code}\r\n\r\nPlease enter this code on the password change page to confirm your identity and proceed with updating your password. If you did not request this change or have any concerns, please contact our support team immediately for assistance. ";
+                authentication.Email(emailtext, email, "CHANGE PASSWORD CODE");
+
+
+                return RedirectToPage("/FinalizeChange", new { usr = enteredUsername, cd = code });
+
+            }
+
+
             
-
-            string emailtext = $"Greetings,\r\n\r\n We have received a request to change the password associated with your account. To proceed with this change, please use the following verification code:\r\n\r\nVerification Code: {code}\r\n\r\nPlease enter this code on the password change page to confirm your identity and proceed with updating your password. If you did not request this change or have any concerns, please contact our support team immediately for assistance. ";
-            authentication.Email(emailtext,_email,"CHANGE PASSWORD CODE");
-        
-
-            return RedirectToPage("/FinalizeChange", new { usr = enteredUsername, cd = code });
         }
 
         public void OnGet()

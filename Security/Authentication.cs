@@ -15,20 +15,20 @@ namespace RegistrationSystem.Security
                 string senderEmail = "v55218585@gmail.com";
                 string appPassword = "cuki xajf jxbv tfdd";
 
-                // Create a MailMessage object
+                
                 MailMessage message = new MailMessage();
                 message.From = new MailAddress(senderEmail);
                 message.To.Add(new MailAddress(receiver));
                 message.Subject = subject;
                 message.Body = emailtext;
 
-                // Configure SMTP client
+               
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
                 smtpClient.EnableSsl = true;
                 smtpClient.UseDefaultCredentials = false;
                 smtpClient.Credentials = new NetworkCredential(senderEmail, appPassword);
 
-                // Send the email
+            
                 smtpClient.Send(message);
 
                 Console.WriteLine("Email sent successfully!");

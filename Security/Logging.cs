@@ -16,15 +16,17 @@ namespace RegistrationSystem.Security
 
                 using (StreamWriter writer = File.AppendText(logFilePath))
                 {
-                    // Get current timestamp
+
                     DateTime currentTime = DateTime.Now;
 
-                    // Log user activity
-                    writer.WriteLine($"[{currentTime}] User activity: {user} {actionevent} {status}");
+                    writer.WriteLine($"[{currentTime}], User activity: ,{user},{actionevent},{status}");
 
-                    // Inform user that activity has been logged
-                    Console.WriteLine("Activity logged successfully.");
                 }
+
+
+
+                    
+                
             }catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());

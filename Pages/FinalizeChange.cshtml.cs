@@ -142,13 +142,12 @@ namespace RegistrationSystem.Pages
         
             if (newpassword == confirmpassword)
             {
-                Console.WriteLine(Username);
+                
                 if (Username.Substring(0,1)=="u") {
-                    Console.WriteLine(verificationCode);
-                    Console.WriteLine(code);
+                   
                     if (verificationCode==code)
                     {
-                        Console.WriteLine("MATCH");
+                        
                         bool status2 = updatePassword();
 
                         if (status2)
@@ -160,6 +159,7 @@ namespace RegistrationSystem.Pages
                     return Page();
                     
                 }
+                //Verify Admin code
                 if (verificationCode==code) {
                     bool status = updateAdminPassword();
 

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RegistrationSystem.DatabaseService;
 using RegistrationSystem.Models;
 using RegistrationSystem.Security;
@@ -10,6 +11,13 @@ namespace RegistrationSystem.Pages
     {
         public List<Student> studentList = new List<Student>();
         public List<Module> moduleList = new List<Module>();
+        public List<SelectListItem> Options = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "Computer Science", Text = "Computer Science" },
+                new SelectListItem { Value = "Accounting", Text = "Accounting" },
+                new SelectListItem { Value = "Law", Text = "Law" },
+                new SelectListItem { Value = "Informatics", Text = "Informatics" }
+            };
 
         [BindProperty]
         public string studentName { get; set; } = default!;

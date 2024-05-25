@@ -9,6 +9,49 @@ namespace RegistrationSystem.DatabaseService
     {
         public QueryService() { }
 
+
+        public string QueryAdminEmail()
+        {
+            try
+            {
+                string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+                //initialise encryption service to encrypt or decrypt student data
+                EncryptionService encryptionService = new EncryptionService();
+
+                SqlConnection connection = new SqlConnection(connectionString);
+
+                string _email = "";
+                connection.Open();
+
+
+                string queryAdmin = @"SELECT emailaddress FROM Administrators WHERE ID = 1";
+
+                SqlCommand command = new SqlCommand(queryAdmin, connection);
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //Decrypt data in order for use in the system
+                             _email = reader.GetString(0);
+
+
+                        }
+                    }
+
+                    return _email;
+
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return "";
+
+            }
+
+        }
+
         public List<Student> QueryGET()
         {
             string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
