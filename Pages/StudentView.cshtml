@@ -4,21 +4,41 @@
 }
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <style>
+    html, body {
+        height: 60%;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-image: linear-gradient(to top, #FFFFFF 0%, #0000FF 100%);
+    }
     .status-indicator {
         display: inline-block;
         width: 10px;
         height: 10px;
         border-radius: 50%;
         margin-right: 5px;
-        transition: opacity 0.5s ease-in-out; /* CSS transition for opacity */
+        transition: opacity 0.5s ease-in-out; 
+    }
+
+    .collapsible {
+        background-color: #266af2;
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
     }
 
     .online {
-        background-color: #28a745; /* Green */
+        background-color: #28a745; 
     }
 
     .offline {
-        background-color: #dc3545; /* Red */
+        background-color: #dc3545; 
     }
 </style>
 
@@ -29,7 +49,7 @@
     <div class="container mt-5">
         <div>
             <span>@Model.studentUser.StudentName:</span>
-            <span id="statusIndicator" class="status-indicator"></span>
+            <span id="status" class="status-indicator"></span>
             <span id="statusText"></span>
         </div>
     </div>
@@ -41,11 +61,15 @@
             <h2>Enrolled Modules</h2>
             @foreach (var module in Model.courseRegistered)
             {
-                <p>@module</p>
+                <div class="collapsible">
+                    <p>@module</p>
+                </div>
+                
             }
             
             
         </div>
+        <br />
         <button onclick="window.location.href='/RegisterView?User=@Model.studentId'">Register</button>
       
     </main>
@@ -63,34 +87,34 @@
 
         
         function updateUserStatus() {
-            const statusIndicator = document.getElementById('statusIndicator');
-            const statusText = document.getElementById('statusText');
+            const Indicator = document.getElementById('status');
+            const status = document.getElementById('statusText');
 
             if (isUserOnline) {
-                statusIndicator.classList.add('online');
-                statusIndicator.classList.remove('offline');
-                statusText.textContent = 'Online';
-                blinkStatusIndicator(); 
+                Indicator.classList.add('online');
+                Indicator.classList.remove('offline');
+                status.textContent = 'Online';
+                blink(); 
             } else {
-                statusIndicator.classList.add('offline');
-                statusIndicator.classList.remove('online');
-                statusText.textContent = 'Offline';
-                stopBlinking(); 
+                Indicator.classList.add('offline');
+                Indicator.classList.remove('online');
+                status.textContent = 'Offline';
+                stop(); 
             }
         }
 
-        // Function to toggle blinking effect
-        function blinkStatusIndicator() {
-            const statusIndicator = document.getElementById('statusIndicator');
+       
+        function blink() {
+            const Indicator = document.getElementById('status');
             setInterval(() => {
-                statusIndicator.style.opacity = (statusIndicator.style.opacity === '0' ? '1' : '0');
+                Indicator.style.opacity = (Indicator.style.opacity === '0' ? '1' : '0');
             }, 500); 
         }
 
-        // Function to stop blinking effect
-        function stopBlinking() {
-            const statusIndicator = document.getElementById('statusIndicator');
-            statusIndicator.style.opacity = '1'; e
+        
+        function stop() {
+            const Indicator = document.getElementById('status');
+            Indicator.style.opacity = '1'; e
             clearInterval(); 
         }
 

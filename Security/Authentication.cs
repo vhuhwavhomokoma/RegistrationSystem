@@ -9,33 +9,33 @@ namespace RegistrationSystem.Security
     {
         public Authentication() { }
 
-        public void Email(string emailtext, string receiver, string subject) {
+        public void Email(string emailtext, string receiver, string emailsubject) {
             try
             {
-                string senderEmail = "v55218585@gmail.com";
-                string appPassword = "cuki xajf jxbv tfdd";
+                string sender = "v55218585@gmail.com";
+                string Password = "cuki xajf jxbv tfdd";
 
                 
-                MailMessage message = new MailMessage();
-                message.From = new MailAddress(senderEmail);
-                message.To.Add(new MailAddress(receiver));
-                message.Subject = subject;
-                message.Body = emailtext;
+                MailMessage emailmessage = new MailMessage();
+                emailmessage.From = new MailAddress(sender);
+                emailmessage.To.Add(new MailAddress(receiver));
+                emailmessage.Subject = emailsubject;
+                emailmessage.Body = emailtext;
 
                
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-                smtpClient.EnableSsl = true;
-                smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(senderEmail, appPassword);
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                smtp.EnableSsl = true;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(sender, Password);
 
             
-                smtpClient.Send(message);
+                smtp.Send(emailmessage);
 
-                Console.WriteLine("Email sent successfully!");
+                
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Failed to send email: {ex.Message}");
+                
             }
         }
 

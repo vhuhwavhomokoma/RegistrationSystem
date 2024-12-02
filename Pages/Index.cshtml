@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
     
@@ -68,8 +69,10 @@
                         <div class="form-group">
                             <label for="value2">Password:</label>
                             <input type="password" id="value2" asp-for="pw" class="form-control form-control-lg mb-3" required />
-                            <img src="Icons/eye.svg" onmouseover="showPass();" onmouseout="hidePass();" />
                         </div>
+                        
+                        <i class="far fa-eye" onmouseover="showPass();" onmouseout="hidePass();"></i>
+
                         <p id="error-message" style="color: red;"></p>
                         @if (Model.verify == "INCORRECT")
                         {
@@ -104,12 +107,12 @@
         var expected2 = 'u';
 
         if (sliced !== expected1 && sliced !== expected2) {
-            // Display error message
+            
             document.getElementById('error-message').textContent = 'Incorrect username format. Username should be uXXXXXXX or aXXXXXXX';
-            return false; // Prevent form submission
+            return false; 
         }
 
-        return true; // Allow form submission
+        return true; 
     }
 
 

@@ -22,29 +22,23 @@ namespace RegistrationSystem.Pages
 
         private bool updateAdminPassword()
         {
-            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
+            string connectionAuth = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+            EncryptionService encryptionService = new EncryptionService();
+            SqlConnection connection = new SqlConnection(connectionAuth);
+            
                 try
                 {
                     connection.Open();
 
-                    // Specify the primary key value or any condition to identify the element to update
+                   
+                    string queryUpdateAdminPass = @"UPDATE Administrators SET adminpassword = @NewPass WHERE username = @PrimaryKey";
 
-
-                    // SQL command to update the element
-                    string updateElementSql = @"
-                UPDATE Administrators
-                SET adminpassword = @NewValue1
-                WHERE username = @PrimaryKeyValue";
-
-                    using (SqlCommand command = new SqlCommand(updateElementSql, connection))
-                    {
-                        // Set parameter values
-                        Console.WriteLine(Username);
-                        command.Parameters.AddWithValue("@NewValue1", newpassword);
-                        command.Parameters.AddWithValue("@PrimaryKeyValue", Username);
+                SqlCommand command = new SqlCommand(queryUpdateAdminPass, connection);
+                    
+                        
+                       
+                        command.Parameters.AddWithValue("@NewPass", encryptionService.Encrypt(newpassword));
+                        command.Parameters.AddWithValue("@PrimaryKey", encryptionService.Encrypt(Username));
 
                        
                         int rowsAffected = command.ExecuteNonQuery();
@@ -62,71 +56,64 @@ namespace RegistrationSystem.Pages
                             connection.Close();
                             return false;
                         }
-                    }
+                    
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                     return false;
                 }
-            }
+            
 
 
         }
 
         private bool updatePassword()
         {
-            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+            string connectionAuth = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+
+            SqlConnection connection = new SqlConnection(connectionAuth);
             
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
                 try
                 {
                     EncryptionService encryptionService = new EncryptionService();
                     
                     connection.Open();
 
-                    // Specify the primary key value or any condition to identify the element to update
+                    string updateStudentPass = @"UPDATE Students SET studentpassword = @NewPass WHERE username = @PrimaryKey";
+
+                SqlCommand command = new SqlCommand(updateStudentPass, connection);
                     
-
-                    // SQL command to update the element
-                    string updateElementSql = @"
-                UPDATE Students
-                SET studentpassword = @NewValue1
-                WHERE username = @PrimaryKeyValue";
-
-                    using (SqlCommand command = new SqlCommand(updateElementSql, connection))
-                    {
                         
-                        command.Parameters.AddWithValue("@NewValue1", encryptionService.Encrypt(newpassword));
-                        command.Parameters.AddWithValue("@PrimaryKeyValue", encryptionService.Encrypt(Username));
+                        command.Parameters.AddWithValue("@NewPass", encryptionService.Encrypt(newpassword));
+                        command.Parameters.AddWithValue("@PrimaryKey", encryptionService.Encrypt(Username));
 
-                        // Execute the command
+                        
                         int rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
                         {
-                            // Update successful
+                          
                             connection.Close();
-                            Console.WriteLine("Successful");
+                            
                             return true;
                         }
                         else
                         {
-                            // No matching element found for the update
+                            
                             
                             connection.Close();
-                            Console.WriteLine("NOT EXECUTED");
+                           
                             return false;
                         }
-                    }
+                    
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex);
+                    
                     return false;
                 }
-            }
+            
 
 
         }

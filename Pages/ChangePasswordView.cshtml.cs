@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using RegistrationSystem.DatabaseService;
@@ -10,31 +11,35 @@ namespace RegistrationSystem.Pages
 {
     public class ChangePasswordViewModel : PageModel
     {
+        private readonly IWebHostEnvironment _webHostEnvironment;
         [BindProperty]
         public string enteredUsername { get; set; } = default!;
 
         private string email { get; set; } = default!;
 
-
+        public ChangePasswordViewModel(IWebHostEnvironment webHostEnvironment)
+        {
+            _webHostEnvironment = webHostEnvironment;
+        }
 
         private void queryEmail(string username)
         {
             try { 
-            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+            string connectionAuth = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
             //initialise encryption service to encrypt or decrypt student data
             EncryptionService encryptionService = new EncryptionService();
 
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(connectionAuth);
 
           
                 connection.Open();
 
                 
-                string queryStudent = @"SELECT email_address FROM Students WHERE username = @Value1";
+                string queryStudent = @"SELECT email_address FROM Students WHERE username = @studentusername";
 
-                using (SqlCommand command = new SqlCommand(queryStudent, connection))
-                {
-                    command.Parameters.AddWithValue("@Value1",encryptionService.Encrypt(username));
+                SqlCommand command = new SqlCommand(queryStudent, connection);
+                
+                    command.Parameters.AddWithValue("@studentusername",encryptionService.Encrypt(username));
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -47,7 +52,7 @@ namespace RegistrationSystem.Pages
                         }
                     }
 
-                }
+                
             }
             catch (Exception ex)
             {
@@ -67,8 +72,9 @@ namespace RegistrationSystem.Pages
 
             if (enteredUsername.Substring(0, 1) == "a")
             {
+                string webRootPath = _webHostEnvironment.WebRootPath;
 
-                QueryService query = new QueryService();
+                QueryService query = new QueryService(webRootPath);
                 string admin_email = query.QueryAdminEmail();
                 Authentication authentication2 = new Authentication();
                 Support support2 = new Support();

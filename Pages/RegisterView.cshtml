@@ -7,7 +7,27 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
 <style>
+    html, body {
+        height: 60%;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-image: linear-gradient(to top, #FFFFFF 0%, #0000FF 100%);
+    }
     .collapsible {
+        background-color: #266af2;
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+
+    .collapsible2 {
         background-color: #266af2;
         color: white;
         cursor: pointer;
@@ -55,12 +75,13 @@
     }
 </div>
 
-
-<div>
+<br/>
+<h4>Modules Registered</h4>
+<div class="text-center" style="height: 200px; overflow-y: scroll;">
     @foreach (var regcourse in Model.courseRegistered)
     {
        
-     <div>
+     <div class="collapsible2">
      <p>@regcourse</p>
       <form method="post">
          <input asp-for="deregister" value="@regcourse" type="hidden" />
@@ -72,8 +93,18 @@
 
 </div>
 
+<br />
+
+<button id="redirectButton">Go to Student View</button>
 
 
+<script>
+    document.getElementById('redirectButton').addEventListener('click', function () {
+       
+        var studentId = @Model.studentid;
+        window.location.href = '/StudentView?id=' + studentId;
+    });
+</script>
 
 
     

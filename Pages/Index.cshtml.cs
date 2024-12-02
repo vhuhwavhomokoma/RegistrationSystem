@@ -11,6 +11,7 @@ namespace RegistrationSystem.Pages
 {
     public class IndexModel : PageModel
     {
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         [BindProperty]
         public string usrnm { get; set; } = default!;
@@ -27,17 +28,23 @@ namespace RegistrationSystem.Pages
 
         public List<Administrator> AdministratorList = new List<Administrator>();
 
+        public IndexModel(IWebHostEnvironment webHostEnvironment)
+        {
+            _webHostEnvironment = webHostEnvironment;
+        }
+
         /*
          * This is for querying all the student entries to create a student list for use to authenticate student user access
          */
 
         private void QueryGET()
         {
-            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=45;";
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string connectionAuth = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=45;";
             //initialise encryption service to encrypt or decrypt student data
             EncryptionService encryptionService = new EncryptionService();
 
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new SqlConnection(connectionAuth);
             
                 try
                 {
@@ -46,8 +53,8 @@ namespace RegistrationSystem.Pages
                    
                     string queryStudent = @"SELECT username, studentpassword, ID, StudentName, course FROM Students";
 
-                    using (SqlCommand command = new SqlCommand(queryStudent, connection))
-                    {
+                SqlCommand command = new SqlCommand(queryStudent, connection);
+                    
                         
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -57,7 +64,7 @@ namespace RegistrationSystem.Pages
                                 
                                 string value1 = encryptionService.Decrypt(reader.GetString(0));
                                 string value2 = encryptionService.Decrypt(reader.GetString(1));
-                                Console.WriteLine(value1);
+                                
                                 int value3 = reader.GetInt32(2);
                                 string value4 = encryptionService.Decrypt(reader.GetString(3));
                                 string value5 = encryptionService.Decrypt(reader.GetString(4));
@@ -69,11 +76,11 @@ namespace RegistrationSystem.Pages
                             }
                         }
 
-                    }
+                    
                 }
                 catch (Exception)
                 {
-                    Logging logging = new Logging();
+                    Logging logging = new Logging(webRootPath);
                     logging.Logger(usrnm,"CONNECTION","TIMEOUT");
                     Page();
                 }
@@ -87,20 +94,22 @@ namespace RegistrationSystem.Pages
 
         private void QueryAdmin()
         {
-            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=45;";
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string connectionAuth = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=45;";
 
             
                 try
                 {
+                EncryptionService encryptionService = new EncryptionService();
 
-                SqlConnection connection = new SqlConnection(connectionString);
+                SqlConnection connection = new SqlConnection(connectionAuth);
                 connection.Open();
 
                     
                     string queryAdministrator = @"SELECT ID, username, adminpassword FROM Administrators";
 
-                    using (SqlCommand command = new SqlCommand(queryAdministrator, connection))
-                    {
+                SqlCommand command = new SqlCommand(queryAdministrator, connection);
+                    
                         
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -108,8 +117,8 @@ namespace RegistrationSystem.Pages
                             {
                                 //Decrypt data in order for use in the system
                                 int value3 = reader.GetInt32(0);
-                                string value4 = reader.GetString(1);
-                                string value5 = reader.GetString(2);
+                                string value4 = encryptionService.Decrypt(reader.GetString(1));
+                                string value5 = encryptionService.Decrypt(reader.GetString(2));
                                //Create and add a administrator to the Administrator list
                                  Administrator admin = new Administrator(value4, value5, value3);
                                 AdministratorList.Add(admin);
@@ -117,12 +126,13 @@ namespace RegistrationSystem.Pages
                             }
                         }
 
-                    }
+                    
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                Logging logging = new Logging();
+                Logging logging = new Logging(webRootPath);
                 logging.Logger(usrnm,"CONNECTION","TIMEOUT");
+                
                     Page();
                 }
             
@@ -133,8 +143,9 @@ namespace RegistrationSystem.Pages
 
         public IActionResult OnPost()
         {
+            string webRootPath = _webHostEnvironment.WebRootPath;
             verify = "CHECK";
-            Logging logging = new Logging();
+            Logging logging = new Logging(webRootPath);
 
             if (pw == null || usrnm == null) //Ensure that both username and password are filled before authenticating
             {
@@ -165,6 +176,9 @@ namespace RegistrationSystem.Pages
                 }
                 verify = "INCORRECT";
                 logging.Logger(usrnm,"ADMIN LOG IN","FAIL");
+                
+                Monitoring monitoring2 = new Monitoring();
+                monitoring2.MonitorAdminActivity(webRootPath);
                 return Page();
                 }
                 QueryGET();
@@ -184,7 +198,7 @@ namespace RegistrationSystem.Pages
             verify = "INCORRECT";
             logging.Logger(usrnm,"USER LOG IN","FAIL");
             Monitoring monitoring = new Monitoring();
-            monitoring.MonitorUSERAcvitiy();
+            monitoring.MonitorUSERAcvitiy(webRootPath);
 
                 return Page();
 

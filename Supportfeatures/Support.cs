@@ -11,7 +11,7 @@ namespace RegistrationSystem.Supportfeatures
 		{
 			const string possibleCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-			int length = 7;
+			int length = 12;
 
 			StringBuilder password = new StringBuilder();
 
@@ -51,7 +51,7 @@ namespace RegistrationSystem.Supportfeatures
 
             Random random = new Random();
 
-            //random 5-digit code
+           
             int code = random.Next(10000, 100000);
 
 

@@ -5,16 +5,19 @@ namespace RegistrationSystem.Security
 {
     public class Logging
     {
-        public Logging() { }
+        string filePath;
+        public Logging(string rootPath) {
+        filePath = Path.Combine(rootPath, "Logging", "logs.txt");
+        }
 
 
         public void Logger(string user, string actionevent, string status)
         {
             try
             {
-                string logFilePath = "Logging/logs.txt";
+                
 
-                using (StreamWriter writer = File.AppendText(logFilePath))
+                using (StreamWriter writer = File.AppendText(filePath))
                 {
 
                     DateTime currentTime = DateTime.Now;
@@ -27,9 +30,9 @@ namespace RegistrationSystem.Security
 
                     
                 
-            }catch (Exception ex)
+            }catch (Exception)
             {
-                Console.WriteLine(ex.ToString());
+                
             }
 
         }

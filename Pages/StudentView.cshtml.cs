@@ -16,35 +16,32 @@ namespace RegistrationSystem.Pages
 
         private Student GetStudent(int student_id)
         {
-            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+            string connectionAuth = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
             EncryptionService encryptionService = new EncryptionService();
 
             try
             {
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
+                SqlConnection connection = new SqlConnection(connectionAuth);
+                
                     connection.Open();
 
-                    int primaryKeyValue = student_id;
+                    int primaryKey = student_id;
 
-                    // SQL command to query the specific element
-                    string queryElementSql = @"
-                SELECT username, studentpassword, StudentName, course
-                FROM Students
-                WHERE ID = @PrimaryKeyValue";
+                    
+                    string queryStudent = @"SELECT username, studentpassword, StudentName, course FROM Students WHERE ID = @PrimaryKey";
 
-                    using (SqlCommand command = new SqlCommand(queryElementSql, connection))
-                    {
-                        // Set parameter value
-                        command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
+                SqlCommand command = new SqlCommand(queryStudent, connection);
+                    
+                       
+                        command.Parameters.AddWithValue("@PrimaryKey", primaryKey);
 
-                        // Execute the command and read the result
+                       
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                // Access data using reader
+                                
                                 string value1 = encryptionService.Decrypt(reader.GetString(0));
                                 string value2 = reader.GetString(1);
                                 string value3 = encryptionService.Decrypt(reader.GetString(2));
@@ -61,12 +58,12 @@ namespace RegistrationSystem.Pages
                         }
 
 
-                    }
+                    
 
-                }
+                
             } catch (Exception e) {
 
-                Console.WriteLine(e.Message);
+                
                 return new Student("", "", 0, "", "");
 
             }
@@ -75,22 +72,20 @@ namespace RegistrationSystem.Pages
 
         private void QueryModulesRegistered(int studentid)
         {
-            string connectionString = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
+            string connectionAuth = "Server=tcp:myserver098.database.windows.net,1433;Initial Catalog=LibraryDB;Persist Security Info=False;User ID=veemokoma;Password=libraryweb4$;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
+            SqlConnection connection = new SqlConnection(connectionAuth);
+            
                 try
                 {
                     connection.Open();
-                    int primaryKeyValue = studentid;
+                    int primaryKey = studentid;
 
-                    string queryAllDataSql = @"
-                SELECT modulesRegistered
-                FROM Students WHERE ID = @PrimaryKeyValue";
+                    string queryRegistered = @"SELECT modulesRegistered FROM Students WHERE ID = @PrimaryKey";
 
-                    using (SqlCommand command = new SqlCommand(queryAllDataSql, connection))
-                    {
-                        command.Parameters.AddWithValue("@PrimaryKeyValue", primaryKeyValue);
+                SqlCommand command = new SqlCommand(queryRegistered, connection);
+                    
+                        command.Parameters.AddWithValue("@PrimaryKey", primaryKey);
 
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -99,7 +94,7 @@ namespace RegistrationSystem.Pages
                                 string value1 = reader.GetString(0);
                                 if (value1!="")
                                 {
-                                    Console.WriteLine(value1);
+                                    
                                     List<string> temp = value1.Split(':').ToList();
                                     courseRegistered.Clear();
                                     for (int i = 0; i < temp.Count; i++)
@@ -120,14 +115,14 @@ namespace RegistrationSystem.Pages
                             }
                         }
 
-                    }
+                    
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex.Message);
+                   
                 }
-            }
+            
 
         }
 

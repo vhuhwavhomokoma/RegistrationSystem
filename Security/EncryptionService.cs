@@ -10,23 +10,23 @@ namespace RegistrationSystem.Security
 {
     public class EncryptionService
     {
-        private readonly SecretClient _secretClient;
+        private readonly SecretClient _secret;
         private const string KeyName = "RegSystemKey1";
         //Encryption and Decryption using AES
         public EncryptionService() {
             var keyVaultUri = "https://regsyskey.vault.azure.net/";
-            _secretClient = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
+            _secret = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
         }
 
-        private string GetEncryptionKeyAsync()
+        private string GetEncryptionKey()
         {
-            var secret =  _secretClient.GetSecret(KeyName);
+            var secret =  _secret.GetSecret(KeyName);
             return secret.Value.Value;
         }
 
         public string Encrypt(string plaintext)
         {
-            string key = GetEncryptionKeyAsync();
+            string key = GetEncryptionKey();
             
             Aes aes = Aes.Create();
             
@@ -61,7 +61,7 @@ namespace RegistrationSystem.Security
         public string Decrypt(string encryptedtext)
         {
 
-            string key = GetEncryptionKeyAsync();
+            string key = GetEncryptionKey();
             
             byte[] cipherText = Convert.FromBase64String(encryptedtext); ;
 

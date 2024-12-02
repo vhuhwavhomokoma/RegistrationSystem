@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +10,8 @@ namespace RegistrationSystem.Pages
 {
     public class AdministratorViewModel : PageModel
     {
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
         public List<Student> studentList = new List<Student>();
         public List<Module> moduleList = new List<Module>();
         public List<SelectListItem> Options = new List<SelectListItem>
@@ -49,9 +52,16 @@ namespace RegistrationSystem.Pages
         [BindProperty]
         public string remove { get; set; } = default!;
 
+
+        public AdministratorViewModel(IWebHostEnvironment webHostEnvironment)
+        {
+            _webHostEnvironment = webHostEnvironment;
+        }
+
         public  IActionResult OnPost()
         {
-            QueryService queryService = new QueryService();
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            QueryService queryService = new QueryService(webRootPath);
             EncryptionService encryptionService = new EncryptionService();
             
             if (remove == null) {
@@ -65,7 +75,7 @@ namespace RegistrationSystem.Pages
                           
                             return Page();
                         }
-                        queryService.queryAddModule(moduleCode, moduleName, moduleDescription);
+                        queryService.queryAddModule(moduleCode, moduleName, moduleDescription,moduleCourse);
                         
                         studentList = queryService.QueryGET();
                         moduleList = queryService.QueryModule();
@@ -99,7 +109,8 @@ namespace RegistrationSystem.Pages
 
         public void OnGet()
         {
-            QueryService queryService = new QueryService();
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            QueryService queryService = new QueryService(webRootPath);
             studentList = queryService.QueryGET();
             moduleList = queryService.QueryModule();
         }
